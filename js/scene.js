@@ -14,6 +14,9 @@
  */
 
 import * as THREE from '../vendor/three.module.min.js';
+import {
+  EffectComposer, RenderPass, ShaderPass, UnrealBloomPass, OutputPass
+} from '../vendor/three.module.min.js';
 
 const PHASES = ['idle', 'burst', 'vortex', 'approach', 'merge', 'aroma'];
 
@@ -52,6 +55,103 @@ function steamSprite() {
   return t;
 }
 
+/** Value-noise fbm on a canvas, tileable enough for a wrapped material. */
+function fbmCanvas(size, octaves, scale, warp = 0) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const g = c.getContext('2d');
+  const img = g.createImageData(size, size);
+
+  const perm = new Uint8Array(512);
+  for (let i = 0; i < 256; i++) perm[i] = i;
+  for (let i = 255; i > 0; i--) {
+    const j = (Math.random() * (i + 1)) | 0;
+    [perm[i], perm[j]] = [perm[j], perm[i]];
+  }
+  for (let i = 0; i < 256; i++) perm[i + 256] = perm[i];
+
+  const fade = (t) => t * t * t * (t * (t * 6 - 15) + 10);
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const grad = (h, x, y) => {
+    const u = (h & 1) ? x : y;
+    const v = (h & 2) ? x : y;
+    return ((h & 4) ? -u : u) + ((h & 8) ? -v : v);
+  };
+  const noise = (x, y) => {
+    const X = Math.floor(x) & 255, Y = Math.floor(y) & 255;
+    const xf = x - Math.floor(x), yf = y - Math.floor(y);
+    const u = fade(xf), v = fade(yf);
+    const aa = perm[perm[X] + Y], ab = perm[perm[X] + Y + 1];
+    const ba = perm[perm[X + 1] + Y], bb = perm[perm[X + 1] + Y + 1];
+    return lerp(
+      lerp(grad(aa, xf, yf), grad(ba, xf - 1, yf), u),
+      lerp(grad(ab, xf, yf - 1), grad(bb, xf - 1, yf - 1), u), v);
+  };
+
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      let px = (x / size) * scale, py = (y / size) * scale;
+      if (warp) {
+        px += noise(px * 0.5, py * 0.5) * warp;
+        py += noise(px * 0.5 + 31.4, py * 0.5 - 17.2) * warp;
+      }
+      let v = 0, amp = 0.5, freq = 1;
+      for (let o = 0; o < octaves; o++) {
+        v += amp * noise(px * freq, py * freq);
+        freq *= 2.07;
+        amp *= 0.5;
+      }
+      const n = Math.max(0, Math.min(255, 128 + v * 190));
+      const i = (y * size + x) * 4;
+      img.data[i] = img.data[i + 1] = img.data[i + 2] = n;
+      img.data[i + 3] = 255;
+    }
+  }
+  g.putImageData(img, 0, 0);
+  return c;
+}
+
+/** Sobel a height canvas into a tangent-space normal map. */
+function normalFromHeight(heightCanvas, strength = 2.4) {
+  const size = heightCanvas.width;
+  const src = heightCanvas.getContext('2d').getImageData(0, 0, size, size).data;
+  const out = document.createElement('canvas');
+  out.width = out.height = size;
+  const g = out.getContext('2d');
+  const img = g.createImageData(size, size);
+  const at = (x, y) =>
+    src[(((y + size) % size) * size + ((x + size) % size)) * 4] / 255;
+
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const dx =
+        (at(x - 1, y - 1) + 2 * at(x - 1, y) + at(x - 1, y + 1)) -
+        (at(x + 1, y - 1) + 2 * at(x + 1, y) + at(x + 1, y + 1));
+      const dy =
+        (at(x - 1, y - 1) + 2 * at(x, y - 1) + at(x + 1, y - 1)) -
+        (at(x - 1, y + 1) + 2 * at(x, y + 1) + at(x + 1, y + 1));
+      const nx = dx * strength, ny = dy * strength, nz = 1;
+      const len = Math.hypot(nx, ny, nz);
+      const i = (y * size + x) * 4;
+      img.data[i] = ((nx / len) * 0.5 + 0.5) * 255;
+      img.data[i + 1] = ((ny / len) * 0.5 + 0.5) * 255;
+      img.data[i + 2] = ((nz / len) * 0.5 + 0.5) * 255;
+      img.data[i + 3] = 255;
+    }
+  }
+  g.putImageData(img, 0, 0);
+  return out;
+}
+
+function canvasTexture(canvas, repeat = 1, srgb = false) {
+  const t = new THREE.CanvasTexture(canvas);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(repeat, repeat);
+  t.anisotropy = 8;
+  if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
 function grainTexture(size = 256) {
   const c = document.createElement('canvas');
   c.width = c.height = size;
@@ -82,10 +182,26 @@ function buildEnvironment(renderer) {
   c.height = 256;
   const g = c.getContext('2d');
   const grad = g.createLinearGradient(0, 0, 0, 256);
-  grad.addColorStop(0.00, '#2a1a0e');
-  grad.addColorStop(0.42, '#120b06');
-  grad.addColorStop(1.00, '#050302');
+  grad.addColorStop(0.00, '#32200f');
+  grad.addColorStop(0.38, '#160d07');
+  grad.addColorStop(1.00, '#040202');
   g.fillStyle = grad;
+  g.fillRect(0, 0, 512, 256);
+
+  // a broad softbox: the large, soft highlight that reads as studio lighting
+  const box = g.createLinearGradient(60, 20, 260, 120);
+  box.addColorStop(0.0, 'rgba(255,236,206,0.9)');
+  box.addColorStop(1.0, 'rgba(255,236,206,0)');
+  g.fillStyle = box;
+  g.beginPath();
+  g.ellipse(170, 62, 120, 46, 0, 0, Math.PI * 2);
+  g.fill();
+
+  // a cool bounce opposite it, so shadows are not uniformly orange
+  const cool = g.createRadialGradient(430, 190, 0, 430, 190, 150);
+  cool.addColorStop(0, 'rgba(120,150,180,0.30)');
+  cool.addColorStop(1, 'rgba(120,150,180,0)');
+  g.fillStyle = cool;
   g.fillRect(0, 0, 512, 256);
   // a soft warm key and a cooler bounce, so highlights have direction
   const key = g.createRadialGradient(150, 70, 0, 150, 70, 150);
@@ -113,20 +229,31 @@ function buildEnvironment(renderer) {
 
 /** An ellipsoid with a crease pressed into both flat faces. */
 function beanGeometry() {
-  const geo = new THREE.SphereGeometry(1, 96, 72);
+  const geo = new THREE.SphereGeometry(1, 128, 96);
   const pos = geo.attributes.position;
-  const a = 0.74, b = 1.0, c = 0.62;
+  // real proportions: roughly 10 long x 7 wide x 5 thick
+  const a = 0.70, b = 1.0, c = 0.50;
   const v = new THREE.Vector3();
+
   for (let i = 0; i < pos.count; i++) {
     v.fromBufferAttribute(pos, i);
     let x = v.x * a, y = v.y * b, z = v.z * c;
-    // crease down the long axis, deepest at the equator
-    const across = Math.exp(-(x * x) / 0.035);
-    const along = Math.max(0, 1 - (y / b) ** 2 * 0.55);
-    const groove = across * along * 0.34;
+
+    const t = y / b;                      // -1 at one tip, +1 at the other
+    // the crease must vanish at the tips, or the poles pinch into a notch
+    const along = Math.max(0, 1 - t * t) ** 0.8;
+    const across = Math.exp(-(x * x) / 0.020);
+    const groove = across * along * 0.40;
     z -= Math.sign(z || 1) * groove;
-    // flatten the poles a little so it is not an egg
-    y *= 1 - 0.06 * Math.exp(-(x * x + z * z) / 0.5);
+
+    // beans are plumper at the middle and taper to blunt ends
+    const taper = 1 - 0.16 * t * t;
+    x *= taper;
+    z *= taper;
+
+    // one face is slightly flatter than the other, as a real bean is
+    if (z > 0) z *= 0.92;
+
     pos.setXYZ(i, x, y, z);
   }
   geo.computeVertexNormals();
@@ -136,14 +263,23 @@ function beanGeometry() {
 function cupGroup(env) {
   const group = new THREE.Group();
 
-  const ceramic = new THREE.MeshStandardMaterial({
+  // glazed porcelain: a hard clearcoat over a near-white body, with a very
+  // faint ripple in the glaze so highlights are not mirror-perfect
+  const glazeHeight = fbmCanvas(256, 3, 3.5);
+  const glazeNormal = canvasTexture(normalFromHeight(glazeHeight, 0.45), 1);
+
+  const ceramic = new THREE.MeshPhysicalMaterial({
     transparent: true,
     opacity: 0,
-    color: 0xeae6dd,
-    roughness: 0.34,
+    color: 0xe4ded2,
+    roughness: 0.28,
     metalness: 0.0,
+    normalMap: glazeNormal,
+    normalScale: new THREE.Vector2(0.22, 0.22),
+    clearcoat: 0.85,
+    clearcoatRoughness: 0.12,
     envMap: env,
-    envMapIntensity: 0.45,
+    envMapIntensity: 0.62,
     side: THREE.DoubleSide
   });
 
@@ -155,7 +291,8 @@ function cupGroup(env) {
   ].map(([x, y]) => new THREE.Vector2(x, y));
 
   const body = new THREE.Mesh(new THREE.LatheGeometry(profile, 96), ceramic);
-  body.castShadow = false;
+  body.castShadow = true;
+  body.receiveShadow = true;
   group.add(body);
 
   const handle = new THREE.Mesh(
@@ -164,15 +301,17 @@ function cupGroup(env) {
   );
   handle.position.set(0.345, 0.30, 0);
   handle.rotation.z = -Math.PI * 0.18;
+  handle.castShadow = true;
   group.add(handle);
 
   const saucer = new THREE.Mesh(
     new THREE.LatheGeometry([
-      [0.000, -0.034], [0.520, -0.034], [0.560, -0.020],
-      [0.566, 0.004], [0.520, 0.000], [0.000, 0.000]
+      [0.000, -0.030], [0.470, -0.030], [0.506, -0.016],
+      [0.512, 0.006], [0.470, 0.000], [0.000, 0.000]
     ].map(([x, y]) => new THREE.Vector2(x, y)), 96),
     ceramic
   );
+  saucer.receiveShadow = true;
   group.add(saucer);
 
   group.userData.ceramic = ceramic;
@@ -315,22 +454,23 @@ function coffeeMaterial() {
         float amp = mix(0.12, 0.55, uMerge) * (1.0 - uSettle * 0.78);
         float ripple = sin(r * 26.0 - uTime * 3.4 + n * 2.2) * amp;
 
-        vec3 black = vec3(0.028, 0.016, 0.010);
-        vec3 body  = vec3(0.090, 0.046, 0.026);
-        vec3 crema = vec3(0.741, 0.506, 0.251);
+        vec3 black = vec3(0.012, 0.007, 0.004);
+        vec3 body  = vec3(0.038, 0.020, 0.012);
+        vec3 crema = vec3(0.60, 0.38, 0.17);
 
         vec3 col = mix(black, body, smoothstep(-0.4, 0.8, n));
-        float cremaMask = smoothstep(0.10, 0.92, n * 0.6 + ripple + uSettle * 0.45);
-        col = mix(col, crema, cremaMask * mix(0.35, 0.80, uSettle));
+        // crema is a thin, broken film — mostly you see dark coffee through it
+        float cremaMask = smoothstep(0.45, 1.05, n * 0.6 + ripple + uSettle * 0.35);
+        col = mix(col, crema, cremaMask * mix(0.12, 0.34, uSettle));
 
-        // crema collects in a ring at the cup wall
-        col = mix(col, crema, smoothstep(0.74, 0.99, r) * 0.72 * (0.35 + uSettle * 0.65));
+        // it collects in a ring where surface tension holds it at the wall
+        col = mix(col, crema, smoothstep(0.86, 1.0, r) * 0.55 * (0.3 + uSettle * 0.7));
 
         // a soft specular smear so the surface reads as liquid
         float glint = pow(max(0.0, 1.0 - length(vUv - vec2(-0.26, 0.34))), 3.4);
-        col += vec3(1.0, 0.86, 0.66) * glint * 0.30 * (0.5 + uSettle * 0.5);
+        col += vec3(1.0, 0.88, 0.70) * glint * 0.46 * (0.5 + uSettle * 0.5);
 
-        col += crema * 0.18 * uMerge * (1.0 - uSettle);
+        col += crema * 0.09 * uMerge * (1.0 - uSettle);
 
         gl_FragColor = vec4(col, uOpacity);
         #include <tonemapping_fragment>
@@ -423,6 +563,77 @@ function vortexPoints(count, sprite) {
   return new THREE.Points(geo, mat);
 }
 
+/* ---------------- the film grade ---------------- */
+
+const GradeShader = {
+  uniforms: {
+    tDiffuse:   { value: null },
+    uTime:      { value: 0 },
+    uVignette:  { value: 0.80 },
+    uGrain:     { value: 0.013 },
+    uAberration:{ value: 0.0016 },
+    uDefocus:   { value: 0.55 },
+    uResolution:{ value: new THREE.Vector2(1, 1) }
+  },
+  vertexShader: /* glsl */ `
+    varying vec2 vUv;
+    void main(){
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }`,
+  fragmentShader: /* glsl */ `
+    precision highp float;
+    uniform sampler2D tDiffuse;
+    uniform float uTime, uVignette, uGrain, uAberration, uDefocus;
+    uniform vec2 uResolution;
+    varying vec2 vUv;
+
+    float hash(vec2 p){
+      return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+    }
+
+    void main(){
+      vec2 uv = vUv;
+      vec2 fromCentre = uv - 0.5;
+      float r = length(fromCentre);
+
+      // chromatic aberration grows toward the edge, as a real lens does
+      float ab = uAberration * r * r;
+      vec3 col;
+      col.r = texture2D(tDiffuse, uv + fromCentre * ab).r;
+      col.g = texture2D(tDiffuse, uv).g;
+      col.b = texture2D(tDiffuse, uv - fromCentre * ab).b;
+
+      // cheap radial defocus: blur grows with distance from the centre, so the
+      // subject stays sharp and the surround falls away like a wide aperture
+      float blur = smoothstep(0.22, 0.75, r) * uDefocus;
+      if (blur > 0.001) {
+        // step in pixels, converted to uv, so the blur is round on any aspect
+        vec2 px = vec2(blur * 3.0) / max(uResolution, vec2(1.0));
+        vec3 acc = col;
+        acc += texture2D(tDiffuse, uv + vec2( px.x, 0.0)).rgb;
+        acc += texture2D(tDiffuse, uv + vec2(-px.x, 0.0)).rgb;
+        acc += texture2D(tDiffuse, uv + vec2( 0.0, px.y)).rgb;
+        acc += texture2D(tDiffuse, uv + vec2( 0.0,-px.y)).rgb;
+        acc += texture2D(tDiffuse, uv + px * 0.7).rgb;
+        acc += texture2D(tDiffuse, uv - px * 0.7).rgb;
+        col = mix(col, acc / 7.0, clamp(blur, 0.0, 1.0));
+      }
+
+      // vignette
+      col *= 1.0 - smoothstep(0.30, 0.92, r) * uVignette * 0.85;
+
+      // a faint warm lift in the shadows, the way warm-lit film behaves
+      col += vec3(0.021, 0.011, 0.004) * (1.0 - smoothstep(0.0, 0.35, length(col)));
+
+      // animated grain, scaled down in the highlights where film is cleaner
+      float g = hash(floor(uv * uResolution / 1.5) + fract(uTime) * 91.7) - 0.5;
+      col += g * uGrain * (1.0 - smoothstep(0.25, 0.95, length(col)));
+
+      gl_FragColor = vec4(col, 1.0);
+    }`
+};
+
 /* ---------------- the scene ---------------- */
 
 export function createScene(canvas, { onPhase = () => {}, reducedMotion = false } = {}) {
@@ -439,16 +650,39 @@ export function createScene(canvas, { onPhase = () => {}, reducedMotion = false 
   }
   if (!renderer.getContext()) return null;
 
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+  // A rough tier: small viewports and low core counts get a cheaper scene.
+  const lowPower =
+    (navigator.hardwareConcurrency || 8) <= 4 ||
+    Math.min(window.innerWidth, window.innerHeight) < 560;
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, lowPower ? 1.25 : 1.75));
+  renderer.shadowMap.enabled = !lowPower;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.06;
+  renderer.toneMappingExposure = 0.92;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   const scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(0x0a0603, 0.019);
 
+
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 160);
   const camTarget = new THREE.Vector3(0, 0, 0);
+
+  // Post chain: bloom gives the warm halo around every hot highlight, the
+  // grade adds vignette, aberration, defocus and grain. Both are what make
+  // the difference between "a 3D render" and "a photograph".
+  const composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+
+  const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.38, 0.65, 0.86);
+  bloom.enabled = !lowPower;    // the most expensive pass by a wide margin
+  composer.addPass(bloom);
+
+  const grade = new ShaderPass(GradeShader);
+  if (lowPower) grade.uniforms.uDefocus.value = 0;   // the blur taps are costly
+  composer.addPass(grade);
+  composer.addPass(new OutputPass());
 
   const env = buildEnvironment(renderer);
   scene.environment = env;
@@ -458,32 +692,61 @@ export function createScene(canvas, { onPhase = () => {}, reducedMotion = false 
   const grain = grainTexture();
 
   /* --- lights --- */
-  scene.add(new THREE.AmbientLight(0x1a0f08, 1.0));
+  scene.add(new THREE.AmbientLight(0x140b05, 0.55));
 
-  const key = new THREE.DirectionalLight(0xffd7a2, 1.7);
-  key.position.set(2.6, 3.4, 2.4);
+  const key = new THREE.DirectionalLight(0xffe2bb, 1.75);
+  key.position.set(2.4, 3.6, 2.2);
+  key.castShadow = true;
+  key.shadow.mapSize.set(lowPower ? 512 : 1024, lowPower ? 512 : 1024);
+  key.shadow.camera.near = 0.5;
+  key.shadow.camera.far = 14;
+  key.shadow.camera.left = -2.2;
+  key.shadow.camera.right = 2.2;
+  key.shadow.camera.top = 2.2;
+  key.shadow.camera.bottom = -2.2;
+  key.shadow.bias = -0.0012;
+  key.shadow.radius = 3;
   scene.add(key);
 
-  const rim = new THREE.DirectionalLight(0xc8741f, 1.15);
-  rim.position.set(-2.8, 1.4, -2.6);
+  // strong warm rim from behind: this is what separates the subject from the
+  // dark background and reads as "cinematic" more than any other single light
+  const rim = new THREE.DirectionalLight(0xff9d3c, 2.0);
+  rim.position.set(-2.4, 1.8, -3.0);
   scene.add(rim);
 
-  const fill = new THREE.PointLight(0xe3b872, 1.1, 12, 2);
-  fill.position.set(0.4, 1.5, 1.8);
+  const rim2 = new THREE.DirectionalLight(0xffb259, 1.1);
+  rim2.position.set(3.0, 0.9, -2.2);
+  scene.add(rim2);
+
+  // a low practical just under the rim, so the crema glows from inside
+  const fill = new THREE.PointLight(0xffc27a, 0.9, 9, 2);
+  fill.position.set(0.3, 0.85, 1.4);
   scene.add(fill);
+
+  const cool = new THREE.DirectionalLight(0x8fb3d9, 0.16);
+  cool.position.set(-2.0, -1.2, 2.4);
+  scene.add(cool);
 
   /* --- 1. the bean --- */
   const beanPivot = new THREE.Group();
   scene.add(beanPivot);
 
-  const beanMat = new THREE.MeshStandardMaterial({
-    color: 0x3a2112,
-    roughness: 0.58,
-    metalness: 0.04,
-    bumpMap: grain,
-    bumpScale: 0.022,
+  // roasted beans are porous and faintly oily: fine pores in the normal map,
+  // and a roughness map so the raised grain catches a sheen the pits do not
+  const poreHeight = fbmCanvas(512, 5, 9, 0.6);
+  const beanNormal = canvasTexture(normalFromHeight(poreHeight, 1.6), 4);
+  const beanRough = canvasTexture(fbmCanvas(512, 4, 6), 2);
+
+  const beanMat = new THREE.MeshPhysicalMaterial({
+    color: 0x42291a,
+    roughness: 0.85,
+    metalness: 0.0,
+    normalMap: beanNormal,
+    normalScale: new THREE.Vector2(0.55, 0.55),
+    roughnessMap: beanRough,
+
     envMap: env,
-    envMapIntensity: 0.85
+    envMapIntensity: 0.28
   });
   const bean = new THREE.Mesh(beanGeometry(), beanMat);
   bean.scale.setScalar(0.42);
@@ -555,7 +818,7 @@ export function createScene(canvas, { onPhase = () => {}, reducedMotion = false 
   vortex.visible = false;
   scene.add(vortex);
 
-  const swirl = vortexPoints(2400, sprite);
+  const swirl = vortexPoints(lowPower ? 900 : 2400, sprite);
   swirl.visible = false;
   scene.add(swirl);
 
@@ -633,6 +896,10 @@ export function createScene(canvas, { onPhase = () => {}, reducedMotion = false 
     const w = canvas.clientWidth || canvas.parentElement.clientWidth || 1;
     const h = canvas.clientHeight || canvas.parentElement.clientHeight || 1;
     renderer.setSize(w, h, false);
+    composer.setSize(w, h);
+    bloom.setSize(w, h);
+    const dpr = renderer.getPixelRatio();
+    grade.uniforms.uResolution.value.set(w * dpr, h * dpr);
     camera.aspect = w / h;
     // keep the wide shot readable on tall phone screens
     camera.fov = h > w ? 56 : 42;
@@ -735,7 +1002,8 @@ export function createScene(canvas, { onPhase = () => {}, reducedMotion = false 
     }
 
     camera.lookAt(camTarget);
-    renderer.render(scene, camera);
+    grade.uniforms.uTime.value = elapsed;
+    composer.render();
   }
 
   function frame() {
@@ -770,6 +1038,7 @@ export function createScene(canvas, { onPhase = () => {}, reducedMotion = false 
     CAM,
     objects: { beanPivot, bean, motes, shards, embers, vortex, swirl, cup, coffee, steam },
     materials: { ceramic: ceramicMat, coffee: coffeeMat, bean: beanMat, vortex: vortexMat },
+    post: { composer, bloom, grade },
     setPhase,
     PHASES,
     start,
@@ -779,6 +1048,7 @@ export function createScene(canvas, { onPhase = () => {}, reducedMotion = false 
     reducedMotion,
     dispose() {
       stop();
+      composer.dispose();
       renderer.dispose();
       scene.traverse((o) => {
         if (o.geometry) o.geometry.dispose();

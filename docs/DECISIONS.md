@@ -147,3 +147,61 @@ grid, each with the same shadow and border radius.
 **Why.** This is an encyclopedia, so it gets a table of contents. The card grid
 carries no information about the content and appears on every generated page
 regardless of subject.
+
+---
+
+## D11 — Photoreal through post-processing, not photography
+
+**Decision.** The cinematic look comes from a render pipeline, not stock
+images: `EffectComposer` → `UnrealBloomPass` → a custom grade pass → `OutputPass`.
+The grade does vignette, radial chromatic aberration, a cheap radial defocus
+and animated film grain.
+
+**Rejected.** Shipping photographs of coffee behind the headline.
+
+**Why.** The brief asks for an original piece, and photographs would have to be
+licensed, would not respond to the camera move, and would break the moment the
+sequence needs the cup to rotate or the swirl to react. Bloom and a grade get
+the same warmth while everything stays interactive and the repository stays
+free of third-party image rights.
+
+**Cost accepted.** Four extra full-screen passes. Mitigated by D13.
+
+---
+
+## D12 — Physically-based materials with procedural detail maps
+
+**Decision.** `MeshPhysicalMaterial` throughout. Surface detail is generated at
+runtime: a Perlin-fbm height field is Sobel-filtered into a tangent-space
+normal map (`fbmCanvas` → `normalFromHeight`), giving the bean its pores and
+the glaze its faint ripple. Shadow mapping is on, with the key light casting.
+
+**Why.** Three things separated the first pass from a photograph: no surface
+micro-detail, no contact shadow, and materials that were uniformly lit. The
+normal maps fix the first, `castShadow`/`receiveShadow` the second, and
+clearcoat plus a roughness map the third. A contact shadow in particular is
+what stops an object reading as floating.
+
+**Tuning notes, learned the hard way.** A dark roast is *dark*: the first
+attempt lit it with two strong rim lights and a clearcoat, and it read as
+amber glass. The fix was a matte body (roughness 0.85, no clearcoat, low
+`envMapIntensity`) lit mostly by the key, with rim light used only to draw an
+edge. Likewise black coffee is near-black — crema is a thin broken film and a
+ring at the wall, not the colour of the whole surface.
+
+---
+
+## D13 — A low-power tier, chosen at boot
+
+**Decision.** On four cores or fewer, or a viewport under 560px on its short
+edge, the scene drops shadow mapping, the bloom pass and the defocus taps, uses
+900 swirl particles instead of 2400, halves the shadow map and caps pixel ratio
+at 1.25.
+
+**Why.** The brief asks for fast loading and mobile fallbacks. Bloom is the
+single most expensive pass and the defocus does seven texture fetches per
+pixel; neither is worth a dropped frame rate on a phone. The grade, the
+materials and the whole sequence still run — only the costly extras go.
+
+**Revisit when.** Worth replacing the heuristic with a measured first-second
+frame rate, which would catch a weak GPU behind a strong CPU.
