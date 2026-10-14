@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beanscape — a world in every cup</title>
+<meta name="description" content="An independent encyclopedia of coffee: its history, its drinks, how it is grown, roasted and brewed, and what it means in kitchens around the world.">
+<meta name="theme-color" content="#0a0603">
+<link rel="icon" href="assets/icons/mark.svg" type="image/svg+xml">
+<link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<meta property="og:title" content="Beanscape — a world in every cup">
+<meta property="og:description" content="An independent encyclopedia of coffee: history, drinks, growing, roasting and brewing.">
+<meta property="og:type" content="website">
+<link rel="preload" href="assets/fonts/fraunces-latin-full-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main" data-i18n="nav.skipToContent">Skip to main content</a>
+
+<header class="masthead">
+  <a class="wordmark" href="./" aria-label="Beanscape, home">
+    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <circle cx="16" cy="16" r="11.4" fill="none" stroke="#e3b872" stroke-width="1.9"/>
+      <circle cx="16" cy="16" r="7.9" fill="#c8741f"/>
+      <path d="M16 8.7C12.4 12.1 19.6 19.9 16 23.3" fill="none" stroke="#17100b"
+            stroke-width="2.6" stroke-linecap="round"/>
+    </svg>
+    <span class="wordmark__name" data-i18n="brand.name">Beanscape</span>
+  </a>
+
+  <div class="masthead__tools">
+    <button class="icon-btn" id="sound-toggle" type="button" aria-pressed="false"
+            data-i18n-attr="aria-label:nav.soundOn" aria-label="Turn ambient sound on">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M11 5 6 9H3v6h3l5 4z"/>
+        <path class="sound-wave" d="M15.5 8.5a5 5 0 0 1 0 7"/>
+        <path class="sound-mute" d="m17 9 4 6m0-6-4 6"/>
+      </svg>
+    </button>
+
+    <div class="lang" id="lang">
+      <button class="lang__toggle" type="button" aria-haspopup="true" aria-expanded="false"
+              aria-controls="lang-menu"
+              data-i18n-attr="aria-label:nav.languageLabel" aria-label="Choose a language">
+        <span class="lang__code">EN</span>
+        <svg viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m1 1.5 5 5 5-5"/>
+        </svg>
+      </button>
+      <ul class="lang__menu" id="lang-menu" role="menu" hidden></ul>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============ the bean-to-cup sequence ============ -->
+  <section class="stage" id="stage">
+    <canvas id="scene" role="img"
+            data-i18n-attr="aria-label:stage.canvasLabel"
+            aria-label="An animated sequence: a coffee bean cracks open and becomes a cup of coffee."></canvas>
+
+    <div class="stage__fallback" id="stage-fallback">
+      <div class="loader" id="stage-loader">
+        <div class="loader__bar"><span></span></div>
+        <p data-i18n="stage.loading">Preparing the scene</p>
+      </div>
+      <div id="stage-nowebgl" hidden>
+        <p data-i18n="stage.fallbackTitle">Your browser is not running 3D graphics.</p>
+        <p data-i18n="stage.fallbackBody">The opening sequence needs WebGL. Everything else on Beanscape works without it — carry on down to the contents.</p>
+      </div>
+    </div>
+
+    <div class="stage__ui">
+      <div class="invite" id="invite">
+        <button class="invite__pulse" id="bean-trigger" type="button"
+                data-i18n-attr="aria-label:stage.inviteAction"
+                aria-label="Crack the coffee bean and begin">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+               stroke-linecap="round" aria-hidden="true">
+            <ellipse cx="12" cy="12" rx="6.4" ry="8.6" transform="rotate(-24 12 12)"/>
+            <path d="M9.4 5.6c2.6 2.9-2.4 9.5.2 12.8"/>
+          </svg>
+        </button>
+        <span class="invite__hint" data-i18n="stage.invite">Tap the bean</span>
+      </div>
+
+      <div class="payoff" id="payoff">
+        <h1 class="payoff__line" data-i18n="stage.headline">Every cup has a story.</h1>
+        <p class="payoff__sub" data-i18n="stage.sub">Steam, crema and aroma are suggested here with light and motion. Your screen cannot carry the smell — the rest of the site carries the knowledge.</p>
+        <a class="btn btn--solid" href="#contents" data-i18n="stage.cta">Explore the world of coffee</a>
+      </div>
+    </div>
+
+    <div class="stage__controls">
+      <button class="ghost-btn" id="skip-btn" type="button" data-i18n="stage.skip">Skip</button>
+      <button class="ghost-btn" id="replay-btn" type="button" hidden data-i18n="stage.replay">Replay</button>
+    </div>
+
+    <a class="scroll-cue" id="scroll-cue" href="#contents">
+      <span data-i18n="stage.scroll">Read on</span>
+      <span class="scroll-cue__rail" aria-hidden="true"></span>
+    </a>
+  </section>
+
+  <!-- ============ what this is ============ -->
+  <section class="statement">
+    <div class="shell statement__grid">
+      <p class="statement__tagline" data-i18n="statement.tagline">A world in every cup</p>
+      <div class="statement__body">
+        <p data-i18n="statement.body1">Beanscape is a reference for people who drink coffee and want to understand it. Where it came from, why a cortado is not a flat white, what roasting actually changes, and how the same bean becomes six different drinks in six different countries.</p>
+        <p data-i18n="statement.body2">Nothing here is for sale. It is a self-initiated project, written and built in the open.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ contents ledger ============ -->
+  <section class="contents" id="contents">
+    <div class="shell">
+      <div class="contents__head">
+        <h2 class="contents__title" data-i18n="contents.title">Contents</h2>
+        <p class="contents__note" data-i18n="contents.note">Five sections. The opening sequence is finished; the rest are being written.</p>
+      </div>
+
+      <div class="ledger">
+        <article class="ledger__row">
+          <div>
+            <h3 class="ledger__name" data-i18n="sections.history.name">Coffee History</h3>
+            <p class="ledger__desc" data-i18n="sections.history.desc">From the Ethiopian highlands to Yemeni ports, Ottoman coffeehouses and the plantations that followed — with the legends kept separate from the record.</p>
+          </div>
+          <span class="ledger__status" data-i18n="status.building">Being written</span>
+        </article>
+
+        <article class="ledger__row">
+          <div>
+            <h3 class="ledger__name" data-i18n="sections.discover.name">Discover Coffee</h3>
+            <p class="ledger__desc" data-i18n="sections.discover.desc">A searchable directory of coffee drinks: espresso, cortado, Turkish coffee, Vietnamese egg coffee and many more, each with its origin and flavour profile.</p>
+          </div>
+          <span class="ledger__status" data-i18n="status.building">Being written</span>
+        </article>
+
+        <article class="ledger__row">
+          <div>
+            <h3 class="ledger__name" data-i18n="sections.recipes.name">Recipes &amp; Brewing</h3>
+            <p class="ledger__desc" data-i18n="sections.recipes.desc">How to actually make them. Ratios, grind, water temperature, timings, equipment, and the mistakes that spoil a cup.</p>
+          </div>
+          <span class="ledger__status" data-i18n="status.building">Being written</span>
+        </article>
+
+        <article class="ledger__row">
+          <div>
+            <h3 class="ledger__name" data-i18n="sections.journey.name">From Bean to Cup</h3>
+            <p class="ledger__desc" data-i18n="sections.journey.desc">Cherry, seed, drying, roast, grind, extraction — what changes at each stage and why you can taste the difference.</p>
+          </div>
+          <span class="ledger__status" data-i18n="status.building">Being written</span>
+        </article>
+
+        <article class="ledger__row">
+          <div>
+            <h3 class="ledger__name" data-i18n="sections.world.name">Coffee Around the World</h3>
+            <p class="ledger__desc" data-i18n="sections.world.desc">Growing regions and drinking cultures, mapped: who grows what, who drinks it how, and what coffee means at the table.</p>
+          </div>
+          <span class="ledger__status" data-i18n="status.building">Being written</span>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="shell footer__grid">
+    <p class="footer__brand"><span data-i18n="brand.name">Beanscape</span> — <span data-i18n="brand.tagline">A world in every cup</span></p>
+    <p data-i18n="footer.note">An independent, non-commercial coffee encyclopedia.</p>
+  </div>
+</footer>
+
+<script src="vendor/gsap.min.js"></script>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

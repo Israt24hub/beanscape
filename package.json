@@ -1,0 +1,22 @@
+{
+  "name": "beanscape",
+  "version": "0.1.0",
+  "description": "An independent encyclopedia of coffee. A world in every cup.",
+  "scripts": {
+    "start": "python3 -m http.server 8777",
+    "vendor": "esbuild node_modules/three/build/three.module.js --bundle --format=esm --minify --legal-comments=none --outfile=vendor/three.module.min.js && cp node_modules/gsap/dist/gsap.min.js vendor/gsap.min.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@fontsource-variable/fraunces": "^5.3.0",
+    "@fontsource/noto-sans-bengali": "^5.3.0",
+    "@fontsource/noto-serif-bengali": "^5.3.0",
+    "gsap": "^3.15.0",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  },
+  "private": true
+}

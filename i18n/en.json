@@ -1,0 +1,70 @@
+{
+  "meta": {
+    "title": "Beanscape — a world in every cup",
+    "description": "An independent encyclopedia of coffee: its history, its drinks, how it is grown, roasted and brewed, and what it means in kitchens around the world."
+  },
+  "brand": {
+    "name": "Beanscape",
+    "tagline": "A world in every cup"
+  },
+  "nav": {
+    "language": "Language",
+    "languageLabel": "Choose a language",
+    "soundOn": "Turn ambient sound on",
+    "soundOff": "Turn ambient sound off",
+    "skipToContent": "Skip to main content"
+  },
+  "stage": {
+    "invite": "Tap the bean",
+    "inviteAction": "Crack the coffee bean and begin",
+    "headline": "Every cup has a story.",
+    "sub": "Steam, crema and aroma are suggested here with light and motion. Your screen cannot carry the smell — the rest of the site carries the knowledge.",
+    "cta": "Explore the world of coffee",
+    "replay": "Replay",
+    "skip": "Skip",
+    "scroll": "Read on",
+    "loading": "Preparing the scene",
+    "fallbackTitle": "Your browser is not running 3D graphics.",
+    "fallbackBody": "The opening sequence needs WebGL. Everything else on Beanscape works without it — carry on down to the contents.",
+    "canvasLabel": "An animated sequence: a coffee bean cracks open and becomes a cup of coffee."
+  },
+  "statement": {
+    "tagline": "A world in every cup",
+    "body1": "Beanscape is a reference for people who drink coffee and want to understand it. Where it came from, why a cortado is not a flat white, what roasting actually changes, and how the same bean becomes six different drinks in six different countries.",
+    "body2": "Nothing here is for sale. It is a self-initiated project, written and built in the open."
+  },
+  "contents": {
+    "title": "Contents",
+    "note": "Five sections. The opening sequence is finished; the rest are being written."
+  },
+  "sections": {
+    "history": {
+      "name": "Coffee History",
+      "desc": "From the Ethiopian highlands to Yemeni ports, Ottoman coffeehouses and the plantations that followed — with the legends kept separate from the record."
+    },
+    "discover": {
+      "name": "Discover Coffee",
+      "desc": "A searchable directory of coffee drinks: espresso, cortado, Turkish coffee, Vietnamese egg coffee and many more, each with its origin and flavour profile."
+    },
+    "recipes": {
+      "name": "Recipes & Brewing",
+      "desc": "How to actually make them. Ratios, grind, water temperature, timings, equipment, and the mistakes that spoil a cup."
+    },
+    "journey": {
+      "name": "From Bean to Cup",
+      "desc": "Cherry, seed, drying, roast, grind, extraction — what changes at each stage and why you can taste the difference."
+    },
+    "world": {
+      "name": "Coffee Around the World",
+      "desc": "Growing regions and drinking cultures, mapped: who grows what, who drinks it how, and what coffee means at the table."
+    }
+  },
+  "status": {
+    "ready": "Ready",
+    "building": "Being written"
+  },
+  "footer": {
+    "note": "An independent, non-commercial coffee encyclopedia.",
+    "source": "Source on GitHub"
+  }
+}

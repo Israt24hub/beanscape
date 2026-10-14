@@ -1,0 +1,104 @@
+/* Beanscape — design tokens
+   Palette follows the brief: dark espresso brown, near-black, warm amber,
+   crema gold, subtle cream. The ramp is deliberately brown, not neutral grey. */
+
+@font-face {
+  font-family: 'Fraunces';
+  src: url('../assets/fonts/fraunces-latin-full-normal.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+                 U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC,
+                 U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Archivo';
+  src: url('../assets/fonts/archivo-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Serif Bengali';
+  src: url('../assets/fonts/noto-serif-bengali-bengali-600-normal.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Sans Bengali';
+  src: url('../assets/fonts/noto-sans-bengali-bengali-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Sans Bengali';
+  src: url('../assets/fonts/noto-sans-bengali-bengali-600-normal.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* --- warm ramp, darkest to lightest --- */
+  --void:        #0a0603;
+  --espresso:    #17100b;
+  --roast:       #2a1b12;
+  --roast-up:    #3d281a;
+  --husk:        #5c4029;
+
+  /* --- accents --- */
+  --amber:       #c8741f;
+  --amber-lift:  #e08c33;
+  --crema:       #e3b872;
+  --cream:       #f2e4ce;
+
+  /* --- text --- */
+  --ink:         var(--cream);
+  --ink-soft:    rgba(242, 228, 206, 0.66);
+  --ink-faint:   rgba(242, 228, 206, 0.40);
+  --rule:        rgba(227, 184, 114, 0.17);
+  --rule-strong: rgba(227, 184, 114, 0.34);
+
+  /* --- type --- */
+  --display: 'Fraunces', 'Noto Serif Bengali', Georgia, serif;
+  --text:    'Archivo', 'Noto Sans Bengali', system-ui, -apple-system, sans-serif;
+
+  /* modular scale, 1.25 from 1rem */
+  --t-xs:  0.78rem;
+  --t-sm:  0.9rem;
+  --t-bd:  1.0625rem;
+  --t-md:  1.3rem;
+  --t-lg:  clamp(1.6rem, 1.1rem + 1.8vw, 2.4rem);
+  --t-xl:  clamp(2.2rem, 1.2rem + 4vw, 4.2rem);
+  --t-2xl: clamp(2.8rem, 1.1rem + 7vw, 6.5rem);
+
+  /* --- space --- */
+  --s1: 0.5rem;
+  --s2: 0.875rem;
+  --s3: 1.5rem;
+  --s4: 2.5rem;
+  --s5: 4rem;
+  --s6: 6.5rem;
+  --s7: 10rem;
+
+  --measure: 64ch;
+  --gutter: clamp(1.25rem, 5vw, 5rem);
+  --shell: 78rem;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Bangla needs more leading and slightly larger optical size */
+:root:lang(bn),
+[lang='bn'] {
+  --t-bd: 1.125rem;
+  --leading-body: 1.85;
+}
