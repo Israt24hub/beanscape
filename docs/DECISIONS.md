@@ -317,3 +317,66 @@ visits. That is the only thing that changes the language.
 sending `discover.html#turkish` to a friend sends them the English page. A
 `?lang=bn` parameter would fix it, and is the obvious next step if link-sharing
 between readers in different languages turns out to matter.
+
+---
+
+## D20 — The vortex is a funnel, not a disc
+
+**Decision.** The vortex is a surface of revolution — a lathe whose radius
+flares from just outside the cup rim to a wide mouth — rendered `BackSide` so
+the camera descends *inside* it.
+
+**Rejected.** The flat `RingGeometry` plane the first version used.
+
+**Why.** A flat disc viewed from above always reads as ground. The storyboard
+shows a tunnel the camera flies into, and no amount of shader work on a plane
+produces that: the geometry has to enclose the viewer. Rebuilding it as a
+funnel is the single change that moved the shot furthest toward the reference.
+
+**Bug worth recording.** Rendering `BackSide` broke the fresnel term. The
+geometric normal points away from a camera inside the surface, so
+`clamp(dot(viewDir, normal), 0, 1)` pinned to zero and
+`pow(1 - 0, k)` saturated to **1.0 on every pixel** — the whole funnel got a
+full-strength crema wash and read as pale fabric. `faceforward()` fixes it.
+Any shader using a fresnel term on a back-facing surface has this hazard.
+
+---
+
+## D21 — The pour is a real beat, not a cut
+
+**Decision.** Scene 5 adds a tapering stream geometry with a flowing shader and
+a splash particle burst at the point of impact. The converging swirl is drawn
+into the throat, the stream appears as it arrives, runs, and then stops before
+the surface settles.
+
+**Why.** The brief lists the pour explicitly and the storyboard shows it. The
+first version went straight from swirl to settled cup, which is exactly the
+kind of unconnected jump the brief warns against.
+
+---
+
+## D22 — Why this is not, and cannot be, the reference videos
+
+**Context.** Two reference videos were supplied as the target look. Both are
+screen recordings of sites whose hero content is **pre-rendered frames** — one
+is offline-rendered 3D (the milk-splash and latte shots), the other rendered or
+filmed food footage. They are played back or scrubbed, not computed live.
+
+**Decision.** Stay with real-time WebGL for now.
+
+**Why this is worth writing down.** Those sites are not doing what this one
+does. Offline rendering has no frame budget: hours of GPU time can go into a
+single second. Real-time has 16 milliseconds, on a phone. The gap between the
+two is a property of the compute budget, not of effort or technique, and no
+amount of shader tuning closes it.
+
+**What would close it.** A scroll-scrubbed image-sequence player — the actual
+architecture those sites use. The code is straightforward; the cost is
+producing the frames (a Blender or C4D render, licensed footage, or a
+generative video service). That remains the upgrade path, and it is a pure
+asset swap rather than a rewrite: the player would take the frames and the
+WebGL sequence would become its low-bandwidth fallback.
+
+**Where the real-time version stands.** Convincing and cinematic, with honest
+materials, contact shadows, a true 3D camera move and a film grade. Not
+photographic. That distinction should stay clear in any description of it.

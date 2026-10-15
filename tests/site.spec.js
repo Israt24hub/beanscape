@@ -174,6 +174,61 @@ test.describe('homepage', () => {
     await ctx.close();
   });
 
+  test('the cup exists before the wide shot and only ever gets closer', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'networkidle' });
+    await page.waitForFunction(() => window.__beanscape !== undefined, { timeout: 30000 });
+
+    // the brief is strict about this: the cup must already be there when the
+    // vortex scene begins, and must never be created or scaled into view
+    const sample = await page.evaluate(() => {
+      const { api, seq } = window.__beanscape;
+      const out = [];
+      api.stop();
+      seq.play();
+      for (const t of [2.4, 4.0, 6.0, 8.0, 11.0]) {
+        seq.timeline.pause(t);
+        api.tick(1 / 60);
+        out.push({
+          t,
+          cupReveal: +api.state.cupReveal.toFixed(3),
+          cupScale: +api.objects.cup.scale.x.toFixed(3),
+          camDist: +api.camera.position.distanceTo(api.camTarget).toFixed(3)
+        });
+      }
+      return out;
+    });
+
+    // fully present from the moment the wide shot exists
+    for (const s of sample) expect(s.cupReveal, `t=${s.t}`).toBeGreaterThan(0.95);
+    // never scaled: growth comes from the camera alone
+    for (const s of sample) expect(s.cupScale, `t=${s.t}`).toBe(1);
+    // and the camera genuinely closes in, monotonically
+    for (let i = 1; i < sample.length; i++) {
+      expect(sample[i].camDist, `t=${sample[i].t}`).toBeLessThan(sample[i - 1].camDist);
+    }
+  });
+
+  test('the pour runs and then stops', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'networkidle' });
+    await page.waitForFunction(() => window.__beanscape !== undefined, { timeout: 30000 });
+
+    const read = await page.evaluate(() => {
+      const { api, seq } = window.__beanscape;
+      api.stop();
+      seq.play();
+      const at = (t) => {
+        seq.timeline.pause(t);
+        api.tick(1 / 60);
+        return +api.state.pour.toFixed(3);
+      };
+      return { before: at(6.0), during: at(9.0), after: at(13.0) };
+    });
+
+    expect(read.before).toBeLessThan(0.05);
+    expect(read.during).toBeGreaterThan(0.6);
+    expect(read.after).toBeLessThan(0.05);
+  });
+
   test('the sequence can be skipped and replayed', async ({ page }) => {
     await page.goto('/', { waitUntil: 'networkidle' });
     await page.waitForFunction(() => window.__beanscape !== undefined, { timeout: 30000 });

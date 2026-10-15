@@ -271,8 +271,8 @@ function cupGroup(env) {
   const ceramic = new THREE.MeshPhysicalMaterial({
     transparent: true,
     opacity: 0,
-    color: 0xe4ded2,
-    roughness: 0.28,
+    color: 0x4a3a30,
+    roughness: 0.30,
     metalness: 0.0,
     normalMap: glazeNormal,
     normalScale: new THREE.Vector2(0.22, 0.22),
@@ -304,18 +304,49 @@ function cupGroup(env) {
   handle.castShadow = true;
   group.add(handle);
 
+  const saucerMat = ceramic.clone();
+  saucerMat.color = new THREE.Color(0x3a2d26);
+  saucerMat.roughness = 0.52;
+  saucerMat.clearcoat = 0.4;
+  saucerMat.envMapIntensity = 0.3;
+
   const saucer = new THREE.Mesh(
     new THREE.LatheGeometry([
       [0.000, -0.030], [0.470, -0.030], [0.506, -0.016],
       [0.512, 0.006], [0.470, 0.000], [0.000, 0.000]
     ].map(([x, y]) => new THREE.Vector2(x, y)), 96),
-    ceramic
+    saucerMat
   );
   saucer.receiveShadow = true;
   group.add(saucer);
 
   group.userData.ceramic = ceramic;
+  group.userData.saucer = saucerMat;
   return group;
+}
+
+/** The vortex as a real funnel: a surface of revolution whose radius flares
+ *  from just outside the cup rim up to a wide mouth. The camera descends
+ *  inside it, which is what makes the shot read as a tunnel rather than a
+ *  floor — a flat disc seen from above always looks like ground. */
+function funnelGeometry(throat = 0.58, mouth = 26, height = 9, rings = 150) {
+  const profile = [];
+  for (let i = 0; i <= rings; i++) {
+    const t = i / rings;
+    // a hyperbolic flare: tight at the throat, opening fast near the mouth
+    const r = throat + (mouth - throat) * Math.pow(t, 2.7);
+    profile.push(new THREE.Vector2(r, t * height));
+  }
+  const geo = new THREE.LatheGeometry(profile, 180);
+  geo.computeVertexNormals();
+  return geo;
+}
+
+/** A tapering stream of liquid falling into the cup. */
+function pourGeometry(topR = 0.030, bottomR = 0.017, height = 1.0, segs = 64) {
+  const geo = new THREE.CylinderGeometry(topR, bottomR, height, 28, segs, true);
+  geo.translate(0, height / 2, 0);   // origin at the bottom, so it grows downward
+  return geo;
 }
 
 /* ---------------- shaders ---------------- */
@@ -354,63 +385,127 @@ function vortexMaterial() {
   return new THREE.ShaderMaterial({
     transparent: true,
     depthWrite: false,
-    side: THREE.DoubleSide,
+    side: THREE.BackSide,          // we are inside the funnel looking at its wall
     uniforms: {
-      uTime: { value: 0 },
-      uPull: { value: 0 },   // 0 wide and calm, 1 drawn tight toward the cup
-      uFade: { value: 0 },   // overall opacity
-      uCam:  { value: new THREE.Vector3() }
+      uTime:   { value: 0 },
+      uPull:   { value: 0 },       // 0 calm, 1 drawn tight toward the cup
+      uFade:   { value: 0 },
+      uCam:    { value: new THREE.Vector3() },
+      uHeight: { value: 12 }
     },
     vertexShader: /* glsl */ `
-      varying vec2 vPos;
       varying vec3 vWorld;
+      varying vec3 vNormalW;
+      varying float vH;
+      varying float vAngle;
+      varying float vRadius;
       void main(){
-        vPos = position.xy;
         vec4 world = modelMatrix * vec4(position, 1.0);
         vWorld = world.xyz;
+        vNormalW = normalize(mat3(modelMatrix) * normal);
+        vH = position.y;
+        vRadius = length(position.xz);
+        vAngle = atan(position.z, position.x);
         gl_Position = projectionMatrix * viewMatrix * world;
       }`,
     fragmentShader: /* glsl */ `
       precision highp float;
-      uniform float uTime, uPull, uFade;
+      uniform float uTime, uPull, uFade, uHeight;
       uniform vec3 uCam;
-      varying vec2 vPos;
       varying vec3 vWorld;
+      varying vec3 vNormalW;
+      varying float vH, vAngle, vRadius;
       ${SNOISE}
+
       void main(){
-        float r = length(vPos);
-        float a = atan(vPos.y, vPos.x);
-        // the swirl tightens as it nears the centre
-        float twist = (3.6 + uPull * 5.0) / (r + 1.4);
-        float t = uTime * (0.16 + uPull * 0.26);
-        vec2 q = vec2(a * 1.9 + twist + t * 2.2, r * 0.30 - t * 1.5);
-        // how much of the noise domain this pixel covers
+        float t  = clamp(vH / uHeight, 0.0, 1.0);   // 0 at the throat, 1 at the mouth
+        float spin = uTime * (0.22 + uPull * 0.38);
+
+        // the swirl winds tighter as it nears the throat, and the whole sheet
+        // slides downward: liquid being drawn into the cup
+        float twist = (2.6 + uPull * 4.2) / (vRadius * 0.35 + 0.8);
+        vec2 q = vec2(vAngle * 2.3 + twist + spin * 2.0, t * 5.5 - spin * 2.6);
+
+        // damp the detail where a pixel spans too much of the noise field,
+        // otherwise the grazing wall aliases into coloured banding
         float footprint = fwidth(q.x) + fwidth(q.y);
-        float detail = 1.0 - smoothstep(0.30, 1.40, footprint);
-        float n = fbm(q) * detail;
-        float n2 = fbm(q * 2.3 + vec2(n * 0.8, -t)) * detail;
+        float detail = 1.0 - smoothstep(0.35, 1.6, footprint);
 
-        vec3 deep  = vec3(0.043, 0.025, 0.015);
-        vec3 roast = vec3(0.168, 0.086, 0.043);
-        vec3 crema = vec3(0.780, 0.520, 0.246);
+        float n  = fbm(q) * detail;
+        float n2 = fbm(q * 2.4 + vec2(n * 0.9, -spin)) * detail;
 
-        vec3 col = mix(deep, roast, smoothstep(-0.55, 0.65, n));
-        col = mix(col, crema, smoothstep(0.35, 1.05, n + n2 * 0.55) * 0.75);
+        vec3 black = vec3(0.010, 0.005, 0.003);
+        vec3 roast = vec3(0.072, 0.034, 0.017);
+        vec3 crema = vec3(0.56, 0.35, 0.15);
 
-        // brighter where the liquid is pulled in toward the cup
-        col += crema * uPull * 0.30 * smoothstep(9.0, 1.2, r) * (0.45 + n2 * 0.55);
+        vec3 col = mix(black, roast, smoothstep(-0.6, 0.7, n));
+        // crema shows only in the brightest streaks, as it does on real coffee
+        col = mix(col, crema, smoothstep(0.72, 1.35, n + n2 * 0.6) * 0.30);
 
-        float inner = smoothstep(1.00, 5.0, r);          // never cover the cup
-        float outer = 1.0 - smoothstep(7.5, 15.0, r);    // dissolve into the dark
-        // shallow viewing angles alias badly, so let the surface go at grazing
-        vec3 toCam = uCam - vWorld;
-        float dist = length(toCam);
-        float grazing = smoothstep(0.085, 0.42, abs(toCam.y / dist));
-        float near = smoothstep(1.5, 6.5, dist);   // kill the aliased foreground
-        float alpha = inner * outer * grazing * near * uFade * detail
-                    * (0.60 + 0.40 * smoothstep(-0.8, 0.9, n));
+        // glossy liquid: a fresnel sheen along the wall, strongest where the
+        // surface turns away. This is most of what sells it as liquid.
+        vec3 viewDir = normalize(uCam - vWorld);
+        vec3 nrm = faceforward(vNormalW, -viewDir, vNormalW);
+        float fres = pow(1.0 - clamp(dot(viewDir, nrm), 0.0, 1.0), 3.2);
+        col += crema * fres * 0.16 * (0.35 + n2 * 0.65);
+
+        // a brighter band near the throat, where the liquid accelerates
+        col += crema * uPull * 0.13 * (1.0 - smoothstep(0.0, 0.42, t)) * (0.35 + n2 * 0.65);
+
+        float nearThroat = smoothstep(0.0, 0.07, t);          // never cover the cup
+        float mouthFade  = 1.0 - smoothstep(0.62, 1.0, t);    // dissolve into darkness
+        float dist = length(uCam - vWorld);
+        float nearCam = smoothstep(0.55, 3.2, dist);          // no aliased foreground
+
+        float alpha = nearThroat * mouthFade * nearCam * uFade * detail * 0.62
+                    * (0.42 + 0.58 * smoothstep(-0.5, 1.0, n));
         if (alpha < 0.004) discard;
+
         gl_FragColor = vec4(col, alpha);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`
+  });
+}
+
+/** The falling stream. Narrow, dark, with a moving highlight down one side. */
+function pourMaterial() {
+  return new THREE.ShaderMaterial({
+    transparent: true,
+    side: THREE.DoubleSide,
+    uniforms: {
+      uTime: { value: 0 },
+      uFlow: { value: 0 }    // 0 none, 1 full stream
+    },
+    vertexShader: /* glsl */ `
+      precision highp float;
+      uniform float uTime, uFlow;
+      varying vec2 vUv;
+      void main(){
+        vUv = uv;
+        vec3 p = position;
+        // a slight wobble so the column is not a rigid cylinder
+        float w = sin(p.y * 7.0 - uTime * 9.0) * 0.004
+                + sin(p.y * 13.0 + uTime * 6.0) * 0.002;
+        p.x += w;
+        p.z += w * 0.6;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+      }`,
+    fragmentShader: /* glsl */ `
+      precision highp float;
+      uniform float uTime, uFlow;
+      varying vec2 vUv;
+      void main(){
+        // streaks running down the stream read as moving liquid
+        float streak = sin(vUv.y * 46.0 - uTime * 17.0) * 0.5 + 0.5;
+        vec3 dark = vec3(0.030, 0.014, 0.007);
+        vec3 lit  = vec3(0.34, 0.20, 0.09);
+        // one narrow specular edge, as a round wet column catches
+        float edge = pow(max(0.0, 1.0 - abs(vUv.x - 0.28) * 5.5), 3.4);
+        vec3 col = mix(dark, lit, streak * 0.16 + edge * 0.75);
+        float a = uFlow * smoothstep(0.0, 0.08, vUv.y);
+        if (a < 0.01) discard;
+        gl_FragColor = vec4(col, a);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
       }`
@@ -811,10 +906,11 @@ export function createScene(canvas, { onPhase = () => {}, reducedMotion = false 
   }
 
   /* --- 3. the vortex --- */
+  const FUNNEL_H = 9;
   const vortexMat = vortexMaterial();
-  const vortex = new THREE.Mesh(new THREE.RingGeometry(0.62, 24, 160, 32), vortexMat);
-  vortex.rotation.x = -Math.PI / 2;
-  vortex.position.y = -0.012;
+  vortexMat.uniforms.uHeight.value = FUNNEL_H;
+  const vortex = new THREE.Mesh(funnelGeometry(0.58, 26, FUNNEL_H), vortexMat);
+  vortex.position.y = 0.0;      // throat sits at the cup's rim height
   vortex.visible = false;
   scene.add(vortex);
 
@@ -825,6 +921,7 @@ export function createScene(canvas, { onPhase = () => {}, reducedMotion = false 
   /* --- the cup: built once, revealed at scene 3, never re-created --- */
   const cup = cupGroup(env);
   const ceramicMat = cup.userData.ceramic;
+  const saucerMat = cup.userData.saucer;
   cup.visible = false;
   scene.add(cup);
 
@@ -833,6 +930,31 @@ export function createScene(canvas, { onPhase = () => {}, reducedMotion = false 
   coffee.rotation.x = -Math.PI / 2;
   coffee.position.y = 0.462;
   cup.add(coffee);
+
+  /* --- 5. the pour --- */
+  const POUR_H = 1.15;
+  const pourMat = pourMaterial();
+  const pour = new THREE.Mesh(pourGeometry(0.030, 0.017, POUR_H), pourMat);
+  pour.position.y = 0.462;      // bottom of the stream at the coffee surface
+  pour.visible = false;
+  scene.add(pour);
+
+  // splash thrown up where the stream meets the surface
+  const splash = makePoints(260, sprite);
+  splash.material.size = 0.016;
+  splash.visible = false;
+  scene.add(splash);
+  const splashData = [];
+  for (let i = 0; i < 260; i++) {
+    const a = Math.random() * Math.PI * 2;
+    splashData.push({
+      angle: a,
+      speed: 0.25 + Math.random() * 0.75,
+      lift: 0.5 + Math.random() * 1.5,
+      t: Math.random(),
+      rate: 0.9 + Math.random() * 1.5
+    });
+  }
 
   /* --- 6. steam --- */
   const steam = makePoints(440, vapour, THREE.NormalBlending);
@@ -856,10 +978,15 @@ export function createScene(canvas, { onPhase = () => {}, reducedMotion = false 
   }
 
   /* ---------------- camera waypoints ---------------- */
+  /* Waypoints for one continuous descent. The camera starts close on the
+     bean, rises high inside the funnel's mouth, then falls down its axis
+     toward the cup at the throat. The cup grows because the camera is
+     genuinely approaching it, not because anything is being scaled. */
   const CAM = {
     bean:  { pos: new THREE.Vector3(0, 0.12, 2.25), look: new THREE.Vector3(0, 0, 0) },
-    wide:  { pos: new THREE.Vector3(0, 11.5, 27.5), look: new THREE.Vector3(0, 0, 0) },
-    close: { pos: new THREE.Vector3(0, 0.94, 2.10), look: new THREE.Vector3(0, 0.40, 0) },
+    mouth: { pos: new THREE.Vector3(0, 9.2, 7.4),   look: new THREE.Vector3(0, 1.2, 0) },
+    mid:   { pos: new THREE.Vector3(0, 3.4, 3.0),   look: new THREE.Vector3(0, 0.55, 0) },
+    close: { pos: new THREE.Vector3(0, 1.26, 2.55), look: new THREE.Vector3(0, 0.46, 0) },
     rest:  { pos: new THREE.Vector3(0, 1.00, 2.32), look: new THREE.Vector3(0, 0.50, 0) }
   };
   camera.position.copy(CAM.bean.pos);
@@ -877,6 +1004,7 @@ export function createScene(canvas, { onPhase = () => {}, reducedMotion = false 
     pull: 0,
     merge: 0,
     settle: 0,
+    pour: 0,
     steamFade: 0
   };
 
@@ -923,8 +1051,11 @@ export function createScene(canvas, { onPhase = () => {}, reducedMotion = false 
     swirl.visible = state.swirlFade > 0.002;
     cup.visible = state.cupReveal > 0.002;
     steam.visible = state.steamFade > 0.002;
+    pour.visible = state.pour > 0.002;
+    splash.visible = state.pour > 0.02;
 
     ceramicMat.opacity = state.cupReveal;
+    saucerMat.opacity = state.cupReveal;
     coffeeMat.uniforms.uOpacity.value = state.cupReveal;
 
     // bean idle: a slow turn plus a small shiver, inviting a tap
@@ -973,6 +1104,32 @@ export function createScene(canvas, { onPhase = () => {}, reducedMotion = false 
     su.uTime.value = elapsed;
     su.uPull.value = state.pull;
     su.uFade.value = state.swirlFade;
+
+    pourMat.uniforms.uTime.value = elapsed;
+    pourMat.uniforms.uFlow.value = state.pour;
+    if (pour.visible) {
+      // the column grows down into the cup rather than appearing whole
+      pour.scale.y = Math.min(1, state.pour * 1.6);
+      pour.position.y = 0.462 + POUR_H * (1 - pour.scale.y) * 0.0;
+    }
+
+    if (splash.visible) {
+      const p = splash.geometry.attributes.position.array;
+      for (let i = 0; i < splashData.length; i++) {
+        const sp = splashData[i];
+        sp.t += dt * sp.rate;
+        if (sp.t > 1) sp.t -= 1;
+        const k = sp.t;
+        const r = 0.035 + k * sp.speed * 0.3;
+        // up fast, then fall back under gravity
+        const y = 0.47 + (sp.lift * 0.17) * k - 1.5 * k * k * 0.14;
+        p[i * 3] = Math.cos(sp.angle) * r;
+        p[i * 3 + 1] = Math.max(0.462, y);
+        p[i * 3 + 2] = Math.sin(sp.angle) * r;
+      }
+      splash.geometry.attributes.position.needsUpdate = true;
+      splash.material.opacity = state.pour * 0.55;
+    }
 
     coffeeMat.uniforms.uTime.value = elapsed;
     coffeeMat.uniforms.uMerge.value = state.merge;
@@ -1036,7 +1193,7 @@ export function createScene(canvas, { onPhase = () => {}, reducedMotion = false 
     camTarget,
     state,
     CAM,
-    objects: { beanPivot, bean, motes, shards, embers, vortex, swirl, cup, coffee, steam },
+    objects: { beanPivot, bean, motes, shards, embers, vortex, swirl, cup, coffee, steam, pour, splash },
     materials: { ceramic: ceramicMat, coffee: coffeeMat, bean: beanMat, vortex: vortexMat },
     post: { composer, bloom, grade },
     setPhase,
