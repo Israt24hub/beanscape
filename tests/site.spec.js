@@ -104,6 +104,31 @@ for (const path of PAGES) {
       await expect(page.locator('html')).toHaveAttribute('lang', 'en');
     });
 
+    test('defaults to English regardless of browser language', async ({ browser }) => {
+      // a Bangla-set browser must still land on English: the site is authored
+      // in English, and the reader should be offered the original first
+      const ctx = await browser.newContext({ locale: 'bn-BD' });
+      const page = await ctx.newPage();
+      await page.goto(path, { waitUntil: 'networkidle' });
+      await page.waitForTimeout(900);
+
+      await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+      expect(await page.locator('.lang__code').first().innerText()).toBe('EN');
+      await ctx.close();
+    });
+
+    test('a chosen language survives navigating to another page', async ({ page }) => {
+      await page.goto(path, { waitUntil: 'networkidle' });
+      await page.waitForTimeout(800);
+      await page.locator('.lang__toggle').first().click();
+      await page.locator('.lang__menu:not([hidden]) button[data-lang="bn"]').first().click();
+      await page.waitForTimeout(600);
+
+      await page.goto('/discover.html', { waitUntil: 'networkidle' });
+      await page.waitForTimeout(900);
+      await expect(page.locator('html')).toHaveAttribute('lang', 'bn');
+    });
+
     test('languages that are not written yet are disabled', async ({ page }) => {
       await page.goto(path, { waitUntil: 'networkidle' });
       await page.waitForTimeout(700);

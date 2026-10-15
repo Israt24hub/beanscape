@@ -82,15 +82,23 @@ function applyDictionary(dict, root) {
   if (desc && descEl) descEl.setAttribute('content', desc);
 }
 
+export const DEFAULT_LANG = 'en';
+
+/* English is the default for every visitor. The browser's own language is
+ * deliberately NOT consulted: the site is authored in English first, so a
+ * reader whose browser is set to another language would otherwise land on a
+ * translation without ever being offered the original. Language changes only
+ * when someone picks one, and that choice is then remembered so it survives
+ * moving between pages. */
 function preferredLanguage() {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored && LANGS.some((l) => l.code === stored && l.ready)) return stored;
-  for (const tag of navigator.languages || [navigator.language || 'en']) {
-    const base = String(tag).toLowerCase().split('-')[0];
-    const match = LANGS.find((l) => l.code === base && l.ready);
-    if (match) return match.code;
+  let stored = null;
+  try {
+    stored = localStorage.getItem(STORAGE_KEY);
+  } catch {
+    // private mode or blocked storage: fall through to the default
   }
-  return 'en';
+  if (stored && LANGS.some((l) => l.code === stored && l.ready)) return stored;
+  return DEFAULT_LANG;
 }
 
 export function createI18n(root = document) {

@@ -291,3 +291,29 @@ The suite catches them every time.
   nothing to reveal it.
 - `concurrency: pages` with `cancel-in-progress: false` queues deploys instead
   of cancelling one midway, which can leave Pages in a half-published state.
+
+---
+
+## D19 — English is the default for everyone; the browser's language is ignored
+
+**Decision.** Every visitor gets English on arrival. `preferredLanguage()`
+consults only a previously stored choice, never `navigator.languages`.
+
+**Rejected.** Auto-detecting the browser's language, which is what the first
+implementation did.
+
+**Why.** The site is authored in English and translated from it, so English is
+the reference text rather than one option among six. Auto-detection meant a
+reader whose browser was set to Bangla landed on a translation without ever
+being shown the original — and, worse, could not tell that a translation was
+what they were reading. It also made the first impression unpredictable: the
+same URL showed different things to different people with nothing in the UI
+explaining why.
+
+A stored choice still wins, so toggling once carries across pages and return
+visits. That is the only thing that changes the language.
+
+**Known gap.** Sharing a link does not share a language: a Bangla reader
+sending `discover.html#turkish` to a friend sends them the English page. A
+`?lang=bn` parameter would fix it, and is the obvious next step if link-sharing
+between readers in different languages turns out to matter.
