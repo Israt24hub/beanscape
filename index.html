@@ -16,6 +16,7 @@
 <link rel="preload" href="assets/fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/page.css">
 <link rel="stylesheet" href="css/home.css">
 </head>
 <body>
@@ -32,6 +33,14 @@
     </svg>
     <span class="wordmark__name" data-i18n="brand.name">Beanscape</span>
   </a>
+
+  <ul class="sitenav sitenav--hero">
+    <li><a href="history.html" aria-disabled="true" data-i18n="sections.history.name">Coffee History</a></li>
+    <li><a href="discover.html" data-i18n="sections.discover.name">Discover Coffee</a></li>
+    <li><a href="recipes.html" aria-disabled="true" data-i18n="sections.recipes.name">Recipes &amp; Brewing</a></li>
+    <li><a href="journey.html" aria-disabled="true" data-i18n="sections.journey.name">From Bean to Cup</a></li>
+    <li><a href="world.html" aria-disabled="true" data-i18n="sections.world.name">Coffee Around the World</a></li>
+  </ul>
 
   <div class="masthead__tools">
     <button class="icon-btn" id="sound-toggle" type="button" aria-pressed="false"
@@ -138,12 +147,12 @@
           <span class="ledger__status" data-i18n="status.building">Being written</span>
         </article>
 
-        <article class="ledger__row">
+        <article class="ledger__row ledger__row--live">
           <div>
-            <h3 class="ledger__name" data-i18n="sections.discover.name">Discover Coffee</h3>
+            <h3 class="ledger__name"><a href="discover.html" data-i18n="sections.discover.name">Discover Coffee</a></h3>
             <p class="ledger__desc" data-i18n="sections.discover.desc">A searchable directory of coffee drinks: espresso, cortado, Turkish coffee, Vietnamese egg coffee and many more, each with its origin and flavour profile.</p>
           </div>
-          <span class="ledger__status" data-i18n="status.building">Being written</span>
+          <span class="ledger__status ledger__status--ready" data-i18n="status.ready">Ready</span>
         </article>
 
         <article class="ledger__row">

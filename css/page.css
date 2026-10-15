@@ -1,0 +1,115 @@
+/* Beanscape — shared chrome for the content pages.
+   The homepage keeps its own fixed, transparent masthead; content pages use
+   this solid one, which sits in the flow and carries the section nav. */
+
+.sitehead {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(10, 6, 3, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.sitehead__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: var(--s2) 0;
+}
+
+.sitehead .wordmark__name { font-size: 0.95rem; }
+
+/* the wordmark and the language control must never be squeezed into wrapping;
+   the nav is the only part allowed to give way */
+.sitehead .wordmark,
+.sitehead .lang { flex: none; }
+.sitenav { min-width: 0; flex-shrink: 1; }
+
+.sitenav {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sitenav a {
+  font-size: var(--t-sm);
+  color: var(--ink-soft);
+  text-decoration: none;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid transparent;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.sitenav a:hover { color: var(--cream); }
+
+.sitenav a[aria-current='page'] {
+  color: var(--crema);
+  border-bottom-color: var(--crema);
+}
+
+.sitenav a[aria-disabled='true'] {
+  color: var(--ink-faint);
+  cursor: default;
+  pointer-events: none;
+}
+
+/* the nav collapses to a scrollable strip under its own line on narrow screens */
+@media (max-width: 62rem) {
+  .sitehead__bar { flex-wrap: wrap; }
+  .sitenav {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: var(--s1);
+    gap: var(--s3);
+    scrollbar-width: none;
+  }
+  .sitenav::-webkit-scrollbar { display: none; }
+}
+
+/* ---------- page header ---------- */
+.pagehead {
+  padding: var(--s6) 0 var(--s4);
+  border-bottom: 1px solid var(--rule);
+}
+
+.pagehead__title {
+  font-size: var(--t-2xl);
+  font-variation-settings: 'wght' 380, 'SOFT' 40, 'WONK' 1, 'opsz' 144;
+  line-height: 0.98;
+  letter-spacing: -0.022em;
+  margin: 0 0 var(--s2);
+  text-wrap: balance;
+}
+
+.pagehead__lede {
+  font-size: var(--t-md);
+  color: var(--ink-soft);
+  max-width: 54ch;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ---------- footer (content pages) ---------- */
+.sitefoot {
+  border-top: 1px solid var(--rule);
+  margin-top: var(--s6);
+  padding: var(--s4) 0 var(--s5);
+}
+
+.sitefoot__grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s3);
+}
+
+.sitefoot p { margin: 0; font-size: var(--t-sm); color: var(--ink-faint); }
+.sitefoot a { color: var(--ink-soft); }

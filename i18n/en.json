@@ -35,7 +35,7 @@
   },
   "contents": {
     "title": "Contents",
-    "note": "Five sections. The opening sequence is finished; the rest are being written."
+    "note": "Five sections. Discover Coffee is live; the rest are being written."
   },
   "sections": {
     "history": {
@@ -66,5 +66,26 @@
   "footer": {
     "note": "An independent, non-commercial coffee encyclopedia.",
     "source": "Source on GitHub"
+  },
+  "discover": {
+    "pageTitle": "Discover Coffee — Beanscape",
+    "title": "Discover Coffee",
+    "lede": "Sixteen drinks from around the world — where each comes from, what it tastes like, and what actually separates it from the one next to it on the menu.",
+    "searchLabel": "Search drinks",
+    "searchPlaceholder": "Search by name, origin or flavour…",
+    "clear": "Clear search",
+    "filterLabel": "Filter by kind",
+    "countOne": "{n} drink",
+    "countMany": "{n} drinks",
+    "empty": "No drink matches that. Try a country, a flavour, or clear the filters.",
+    "loadError": "The drink directory could not be loaded.",
+    "back": "All drinks",
+    "worthKnowing": "Worth knowing",
+    "previous": "Previous",
+    "next": "Next",
+    "factOrigin": "Origin",
+    "factServed": "Typically served",
+    "factProfile": "Flavour profile",
+    "factKind": "Kind"
   }
 }

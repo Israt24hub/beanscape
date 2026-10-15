@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# only the newest run per branch matters; cancel the rest
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # seconds, not minutes: catches malformed JSON, a missing translation or
+      # a broken asset path before anyone waits for a browser to start
+      - name: Structural checks
+        run: npm run validate
+
+      # the vendored bundle is committed so the site needs no build step; if it
+      # drifts from package.json the site would ship a different three than the
+      # lockfile claims, so rebuild it and fail on any difference
+      - name: Vendored bundle matches the lockfile
+        run: |
+          npm run vendor
+          if ! git diff --quiet -- vendor/; then
+            echo "::error::vendor/ is stale. Run 'npm run vendor' and commit the result."
+            git diff --stat -- vendor/
+            exit 1
+          fi
+          echo "vendor/ is up to date"
+
+  test:
+    name: Browser tests
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Run tests
+        run: npx playwright test
+
+      - name: Upload report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14

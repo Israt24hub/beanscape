@@ -1,0 +1,47 @@
+name: Deploy to Pages
+
+# Deploys only after CI has passed on main, so a red build never reaches the
+# live site. Nothing is compiled — the repository is already the site.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# never let two deploys race; queue instead, and do not cancel one midway
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # workflow_run fires on failure too, so gate on the conclusion. The manual
+    # dispatch path has no upstream run, hence the second condition.
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+
+      - name: Package the site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # the repository root is the site; node_modules and tests are
+          # excluded by .gitignore and are not present in a checkout
+          path: .
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

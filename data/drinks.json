@@ -1,0 +1,332 @@
+{
+  "$comment": "Language-neutral structure with per-language prose inline, so adding a language never risks two files drifting apart. Ratios and volumes are typical, not canonical: they vary by café, city and era, and the copy says so.",
+  "families": [
+    { "id": "espresso",  "en": "Espresso-based", "bn": "এসপ্রেসো-ভিত্তিক" },
+    { "id": "milk",      "en": "Milk coffee",    "bn": "দুধ-কফি" },
+    { "id": "black",     "en": "Black coffee",   "bn": "কালো কফি" },
+    { "id": "iced",      "en": "Iced & cold",    "bn": "ঠান্ডা কফি" },
+    { "id": "spiced",    "en": "Spiced & sweet", "bn": "মশলা ও মিষ্টি" }
+  ],
+  "drinks": [
+    {
+      "id": "espresso",
+      "family": "espresso",
+      "origin": { "en": "Italy", "bn": "ইতালি" },
+      "name": { "en": "Espresso", "bn": "এসপ্রেসো" },
+      "tagline": {
+        "en": "A short, pressurised shot — the base most other drinks are built on.",
+        "bn": "অল্প পরিমাণ, চাপ দিয়ে তোলা শট — অন্য বেশির ভাগ পানীয়ের ভিত্তি।"
+      },
+      "volume": { "en": "25–30 ml", "bn": "২৫–৩০ মি.লি." },
+      "profile": { "en": "Intense, syrupy, bittersweet", "bn": "তীব্র, ঘন, তেতো-মিষ্টি" },
+      "body": {
+        "en": "Espresso is defined by method rather than bean: hot water forced through finely ground coffee at roughly nine atmospheres of pressure. The pressure pulls out oils and fine solids that filter brewing leaves behind, which is why the result is heavier on the tongue than its small volume suggests, and why it carries crema — the hazel foam that sits on top.\n\nIt reached its modern form in Italy in the 1940s, when Achille Gaggia's lever machine made real pressure extraction practical. Earlier steam-driven machines were faster than brewing by pot but produced something closer to strong filter coffee.\n\nServed alone it is a small, concentrated drink meant to be finished in a few mouthfuls, often standing at a bar.",
+        "bn": "এসপ্রেসো নির্ধারিত হয় পদ্ধতিতে, বীজে নয়: মিহি করে গুঁড়ো করা কফির ভেতর দিয়ে প্রায় নয় বায়ুমণ্ডল চাপে গরম পানি ঠেলে পাঠানো হয়। এই চাপ তেল আর সূক্ষ্ম কণা টেনে বের করে, যা সাধারণ ছেঁকে বানানো কফিতে থেকে যায়। এ কারণেই অল্প পরিমাণ হলেও জিভে এটি ভারী লাগে, আর উপরে জমে ক্রেমা — বাদামি ফেনার স্তর।\n\nআধুনিক রূপ পায় ১৯৪০-এর দশকে ইতালিতে, যখন আকিলে গাজ্জিয়ার লিভার-মেশিন সত্যিকারের চাপে নিষ্কাশন সম্ভব করে তোলে। তার আগের বাষ্পচালিত মেশিনগুলো পাত্রে বানানোর চেয়ে দ্রুত ছিল, কিন্তু ফল হতো বরং কড়া ফিল্টার কফির মতো।\n\nএকা পরিবেশিত হলে এটি অল্প, ঘন একটি পানীয় — কয়েক চুমুকে শেষ করার জন্য, প্রায়ই বারে দাঁড়িয়ে।"
+      },
+      "notes": {
+        "en": ["Crema is a sign of fresh coffee and gas in the beans, not of quality on its own.", "In Italy, ordering \"un caffè\" means this."],
+        "bn": ["ক্রেমা দেখলে বোঝা যায় কফি টাটকা আর বীজে গ্যাস আছে — এটি একাই গুণমানের প্রমাণ নয়।", "ইতালিতে \"উন কাফে\" চাইলে এটিই আসে।"]
+      }
+    },
+    {
+      "id": "cappuccino",
+      "family": "milk",
+      "origin": { "en": "Italy", "bn": "ইতালি" },
+      "name": { "en": "Cappuccino", "bn": "কাপুচিনো" },
+      "tagline": {
+        "en": "Espresso, steamed milk and a thick cap of foam in roughly equal parts.",
+        "bn": "এসপ্রেসো, বাষ্পে গরম দুধ আর পুরু ফেনা — মোটামুটি সমান ভাগে।"
+      },
+      "volume": { "en": "150–180 ml", "bn": "১৫০–১৮০ মি.লি." },
+      "profile": { "en": "Soft, airy, lightly sweet", "bn": "নরম, হালকা, অল্প মিষ্টি" },
+      "body": {
+        "en": "The classic description is one third espresso, one third steamed milk, one third foam — a useful guide rather than a rule, since the foam is where cafés differ most. A traditional Italian cappuccino has a deep, dry foam that sits well above the rim; many modern cafés pour a wetter microfoam and finish with latte art instead.\n\nThe name comes from the Capuchin friars, whose brown habits the colour was said to resemble. The drink in roughly this form spread through Italian bars in the early twentieth century, after espresso machines made the espresso base routine.\n\nIn Italy it is strongly a morning drink; ordering one after a meal is unusual, though nobody will stop you.",
+        "bn": "প্রচলিত বর্ণনা: এক ভাগ এসপ্রেসো, এক ভাগ বাষ্পে গরম দুধ, এক ভাগ ফেনা — এটি নিয়ম নয়, কাজ চালানোর মাপ, কারণ ফেনাতেই ক্যাফেভেদে সবচেয়ে বেশি পার্থক্য। ঐতিহ্যবাহী ইতালীয় কাপুচিনোর ফেনা গাঢ় ও শুকনো, কাপের কিনারা ছাড়িয়ে ওঠে; অনেক আধুনিক ক্যাফে বরং পাতলা মাইক্রোফোম ঢেলে উপরে নকশা করে।\n\nনামটি এসেছে কাপুচিন সন্ন্যাসীদের থেকে — তাঁদের বাদামি পোশাকের রঙের সঙ্গে মিল বলে বলা হয়। মোটামুটি এই চেহারায় পানীয়টি বিশ শতকের শুরুতে ইতালীয় বারগুলোতে ছড়ায়, এসপ্রেসো মেশিন সহজলভ্য হওয়ার পর।\n\nইতালিতে এটি দৃঢ়ভাবে সকালের পানীয়; খাওয়ার পরে চাওয়া অস্বাভাবিক, যদিও কেউ আটকাবে না।"
+      },
+      "notes": {
+        "en": ["Dry cappuccino means more foam, wet means more liquid milk.", "The 1/3 rule is a teaching aid; real cafés vary widely."],
+        "bn": ["\"ড্রাই\" কাপুচিনো মানে বেশি ফেনা, \"ওয়েট\" মানে বেশি তরল দুধ।", "এক-তৃতীয়াংশের নিয়মটি শেখানোর সুবিধার জন্য; বাস্তবে ক্যাফেভেদে অনেক তফাত।"]
+      }
+    },
+    {
+      "id": "latte",
+      "family": "milk",
+      "origin": { "en": "Italy / United States", "bn": "ইতালি / যুক্তরাষ্ট্র" },
+      "name": { "en": "Caffè latte", "bn": "ক্যাফে লাতে" },
+      "tagline": {
+        "en": "The mildest of the espresso-and-milk drinks: a lot of milk, a thin layer of foam.",
+        "bn": "এসপ্রেসো-দুধের পানীয়গুলোর মধ্যে সবচেয়ে মৃদু: অনেক দুধ, পাতলা ফেনা।"
+      },
+      "volume": { "en": "220–350 ml", "bn": "২২০–৩৫০ মি.লি." },
+      "profile": { "en": "Mild, milky, rounded", "bn": "মৃদু, দুধেল, গোলমেলে নয়" },
+      "body": {
+        "en": "A latte is espresso lengthened with a large volume of steamed milk and topped with only a thin layer of foam. The high milk ratio makes it the gentlest of the common espresso drinks — the coffee is present as background rather than foreground.\n\n\"Latte\" is simply the Italian word for milk, and asking for one in Italy may get you a glass of milk; the drink there is caffè latte. The large-format version familiar in much of the world was popularised by American coffee chains from the 1980s onward, which is also where most latte sizing conventions come from.\n\nIt is the usual canvas for latte art, because a thin, glossy microfoam pours cleanly across a wide surface.",
+        "bn": "লাতে হলো এসপ্রেসোকে বড় পরিমাণ বাষ্পে গরম দুধ দিয়ে লম্বা করা, উপরে কেবল পাতলা ফেনার স্তর। দুধের অনুপাত বেশি বলে প্রচলিত এসপ্রেসো-পানীয়গুলোর মধ্যে এটিই সবচেয়ে কোমল — কফি এখানে পটভূমিতে, সামনে নয়।\n\n\"লাতে\" ইতালীয় ভাষায় মানে কেবলই দুধ, তাই ইতালিতে শুধু \"লাতে\" চাইলে এক গ্লাস দুধ আসতে পারে; সেখানে পানীয়টির নাম ক্যাফে লাতে। পৃথিবীর বড় অংশে পরিচিত বড় মাপের সংস্করণটি জনপ্রিয় করে আশির দশক থেকে মার্কিন কফি-চেইনগুলো — মাপের চলতি রীতিগুলোও মূলত সেখান থেকেই।\n\nলাতে আর্টের স্বাভাবিক ক্ষেত্র এটিই, কারণ পাতলা চকচকে মাইক্রোফোম চওড়া পৃষ্ঠে পরিষ্কারভাবে ঢালা যায়।"
+      },
+      "notes": {
+        "en": ["In Italy, ask for caffè latte unless you want plain milk.", "More milk means a milder drink, not a weaker shot."],
+        "bn": ["ইতালিতে শুধু দুধ না চাইলে \"ক্যাফে লাতে\" বলুন।", "বেশি দুধ মানে পানীয় মৃদু — শট দুর্বল নয়।"]
+      }
+    },
+    {
+      "id": "flat-white",
+      "family": "milk",
+      "origin": { "en": "Australia / New Zealand", "bn": "অস্ট্রেলিয়া / নিউজিল্যান্ড" },
+      "name": { "en": "Flat white", "bn": "ফ্ল্যাট হোয়াইট" },
+      "tagline": {
+        "en": "Smaller than a latte, with velvety microfoam rather than a foam cap.",
+        "bn": "লাতের চেয়ে ছোট, উপরে ফেনার টুপি নয় — মসৃণ মাইক্রোফোম।"
+      },
+      "volume": { "en": "150–160 ml", "bn": "১৫০–১৬০ মি.লি." },
+      "profile": { "en": "Strong but smooth, silky", "bn": "কড়া অথচ মসৃণ, রেশমি" },
+      "body": {
+        "en": "A flat white sits between a cappuccino and a latte: less milk than a latte, and the milk is textured into a thin, glossy microfoam that is stirred through the drink rather than floated on top. The result tastes more of coffee than a latte of the same strength, simply because there is less milk diluting it.\n\nBoth Australia and New Zealand claim it, and the record is genuinely contested — versions appear in Sydney and Auckland cafés through the 1980s. It travelled widely in the 2000s as Antipodean baristas opened cafés in London and elsewhere.\n\nMany cafés pull a double ristretto for the base, which keeps the coffee assertive in a small volume.",
+        "bn": "ফ্ল্যাট হোয়াইট কাপুচিনো আর লাতের মাঝামাঝি: লাতের চেয়ে কম দুধ, আর সেই দুধ পাতলা চকচকে মাইক্রোফোমে পরিণত — উপরে ভাসে না, পুরো পানীয়ের সঙ্গে মিশে যায়। একই শক্তির লাতের চেয়ে এতে কফির স্বাদ বেশি, কারণ পাতলা করার মতো দুধ কম।\n\nঅস্ট্রেলিয়া ও নিউজিল্যান্ড দুই দেশই দাবি করে, আর নথিপত্রে বিষয়টি সত্যিই বিতর্কিত — আশির দশকজুড়ে সিডনি ও অকল্যান্ডের ক্যাফেতে সংস্করণ পাওয়া যায়। দুই হাজারের দশকে অ্যান্টিপোডিয়ান বারিস্তারা লন্ডনসহ নানা জায়গায় ক্যাফে খুললে এটি ছড়িয়ে পড়ে।\n\nঅনেক ক্যাফে ভিত্তি হিসেবে ডাবল রিস্ত্রেত্তো টানে, যাতে অল্প পরিমাণেও কফি জোরালো থাকে।"
+      },
+      "notes": {
+        "en": ["The defining feature is milk texture, not a fixed size.", "Often built on ristretto for more intensity in less liquid."],
+        "bn": ["মূল পরিচয় দুধের গঠন, নির্দিষ্ট মাপ নয়।", "কম তরলে বেশি তীব্রতার জন্য প্রায়ই রিস্ত্রেত্তোর উপর বানানো হয়।"]
+      }
+    },
+    {
+      "id": "cortado",
+      "family": "espresso",
+      "origin": { "en": "Spain", "bn": "স্পেন" },
+      "name": { "en": "Cortado", "bn": "কোর্তাদো" },
+      "tagline": {
+        "en": "Espresso cut with a roughly equal measure of warm milk — small and direct.",
+        "bn": "এসপ্রেসোকে প্রায় সমান পরিমাণ গরম দুধ দিয়ে কাটা — ছোট আর সোজাসাপটা।"
+      },
+      "volume": { "en": "60–90 ml", "bn": "৬০–৯০ মি.লি." },
+      "profile": { "en": "Balanced, warm, barely sweet", "bn": "ভারসাম্যপূর্ণ, উষ্ণ, সামান্য মিষ্টি" },
+      "body": {
+        "en": "Cortar means to cut, and that is exactly the idea: just enough warm milk to take the edge off the espresso without turning it into a milk drink. The milk is warmed and lightly textured, with little or no foam, and the whole thing arrives in a small glass.\n\nIt is a staple of Spanish bars and has close relatives across the Spanish-speaking world — the Cuban cortadito adds sugar, and the Portuguese pingado and Italian macchiato work on the same principle with different proportions.\n\nBecause the volume is small, it keeps the coffee clearly in front, which is why it suits people who find a flat white too milky.",
+        "bn": "\"কোর্তার\" মানে কাটা, আর ভাবনাটাও ঠিক তাই: এসপ্রেসোর ঝাঁজ কমানোর মতো যতটুকু গরম দুধ দরকার ঠিক ততটুকু — দুধ-পানীয় বানিয়ে ফেলা নয়। দুধ হালকা গরম ও সামান্য গঠন দেওয়া, ফেনা প্রায় থাকে না, আর পুরোটা আসে ছোট কাচের গ্লাসে।\n\nস্পেনীয় বারগুলোর নিত্যসঙ্গী, আর স্প্যানিশভাষী জগতে এর কাছের আত্মীয় আছে — কিউবার কোর্তাদিতোয় চিনি যোগ হয়, পর্তুগিজ পিঙ্গাদো ও ইতালীয় মাকিয়াতো একই নীতিতে চলে, কেবল অনুপাত আলাদা।\n\nপরিমাণ কম বলে কফি স্পষ্ট সামনে থাকে — যাঁদের কাছে ফ্ল্যাট হোয়াইট বেশি দুধেল লাগে, তাঁদের জন্য এটি মানানসই।"
+      },
+      "notes": {
+        "en": ["Usually served in a small glass rather than a cup.", "Cortadito is the sweetened Cuban version."],
+        "bn": ["সাধারণত কাপে নয়, ছোট কাচের গ্লাসে দেওয়া হয়।", "কোর্তাদিতো হলো কিউবার মিষ্টি সংস্করণ।"]
+      }
+    },
+    {
+      "id": "macchiato",
+      "family": "espresso",
+      "origin": { "en": "Italy", "bn": "ইতালি" },
+      "name": { "en": "Caffè macchiato", "bn": "ক্যাফে মাকিয়াতো" },
+      "tagline": {
+        "en": "Espresso \"stained\" with a spoonful of foamed milk.",
+        "bn": "এসপ্রেসোর উপর এক চামচ ফেনা-দুধের \"দাগ\"।"
+      },
+      "volume": { "en": "35–60 ml", "bn": "৩৫–৬০ মি.লি." },
+      "profile": { "en": "Nearly espresso, slightly softened", "bn": "প্রায় এসপ্রেসো, একটু নরম" },
+      "body": {
+        "en": "Macchiato means stained or marked. The drink is an espresso with a small dollop of foamed milk dropped on top — enough to mark the crema and round off the sharpest edge, and no more. It is the smallest step away from straight espresso.\n\nThe name has caused lasting confusion abroad, where \"macchiato\" on a chain menu often describes a large, sweetened milk drink that bears no relation to this one. Both exist; they are simply different drinks with a shared word.\n\nA latte macchiato inverts the order — milk first, espresso poured through it — and is a much milkier drink.",
+        "bn": "মাকিয়াতো মানে দাগ-লাগা বা চিহ্নিত। পানীয়টি এসপ্রেসোর উপর এক দলা ফেনা-দুধ — ক্রেমায় দাগ পড়ার আর সবচেয়ে তীক্ষ্ণ ঝাঁজটুকু কাটার মতো যথেষ্ট, এর বেশি নয়। খাঁটি এসপ্রেসো থেকে সবচেয়ে ছোট সরে আসা।\n\nনামটি বিদেশে দীর্ঘস্থায়ী বিভ্রান্তি তৈরি করেছে, যেখানে চেইনের মেনুতে \"মাকিয়াতো\" বলতে প্রায়ই বোঝায় বড়, মিষ্টি দুধ-পানীয় — যার সঙ্গে এটির কোনো সম্পর্ক নেই। দুটোই আছে; কেবল একই শব্দে দুটি আলাদা পানীয়।\n\nলাতে মাকিয়াতো ক্রম উল্টে দেয় — আগে দুধ, তার ভেতর দিয়ে এসপ্রেসো ঢালা — এবং সেটি অনেক বেশি দুধেল।"
+      },
+      "notes": {
+        "en": ["Caffè macchiato and latte macchiato are different drinks.", "Chain-menu \"macchiato\" is usually neither."],
+        "bn": ["ক্যাফে মাকিয়াতো আর লাতে মাকিয়াতো আলাদা পানীয়।", "চেইনের মেনুর \"মাকিয়াতো\" সাধারণত এর কোনোটিই নয়।"]
+      }
+    },
+    {
+      "id": "americano",
+      "family": "black",
+      "origin": { "en": "Italy", "bn": "ইতালি" },
+      "name": { "en": "Caffè americano", "bn": "ক্যাফে আমেরিকানো" },
+      "tagline": {
+        "en": "Espresso lengthened with hot water.",
+        "bn": "এসপ্রেসোকে গরম পানি দিয়ে লম্বা করা।"
+      },
+      "volume": { "en": "120–240 ml", "bn": "১২০–২৪০ মি.লি." },
+      "profile": { "en": "Clean, long, less concentrated", "bn": "পরিষ্কার, লম্বা, কম ঘন" },
+      "body": {
+        "en": "An americano is espresso diluted with hot water to roughly the length of a filter coffee. Diluting changes concentration, not extraction: the flavours are the same ones the shot pulled, spread through more liquid, so it tastes lighter but not weaker in character.\n\nThe usual account traces the name to American soldiers in Italy during the Second World War, who found espresso too concentrated and added water to approximate the coffee they were used to. The story is widely repeated and plausible, but it is not firmly documented.\n\nPour order matters a little: water into espresso preserves more crema than espresso into water, though the difference is cosmetic more than anything.",
+        "bn": "আমেরিকানো হলো এসপ্রেসোকে গরম পানি মিশিয়ে ফিল্টার কফির মতো লম্বা করা। পানি মেশালে ঘনত্ব বদলায়, নিষ্কাশন নয়: শটে যে স্বাদগুলো উঠেছিল সেগুলোই বেশি তরলে ছড়িয়ে পড়ে, তাই হালকা লাগে — চরিত্রে দুর্বল হয় না।\n\nপ্রচলিত ব্যাখ্যায় নামটি যায় দ্বিতীয় বিশ্বযুদ্ধের সময় ইতালিতে থাকা মার্কিন সৈনিকদের কাছে, যাঁদের কাছে এসপ্রেসো বেশি ঘন লাগায় পানি মিশিয়ে চেনা কফির কাছাকাছি আনতেন। গল্পটি বহুল প্রচলিত ও যুক্তিসংগত, তবে শক্ত নথিপ্রমাণ নেই।\n\nঢালার ক্রমে সামান্য তফাত হয়: এসপ্রেসোর উপর পানি ঢাললে ক্রেমা বেশি টেকে — যদিও পার্থক্যটা মূলত চেহারায়।"
+      },
+      "notes": {
+        "en": ["A long black is the same idea with the pour order reversed.", "Dilution changes strength, not what was extracted."],
+        "bn": ["\"লং ব্ল্যাক\" একই ভাবনা, কেবল ঢালার ক্রম উল্টো।", "পানি মেশানো শক্তি বদলায়, কী নিষ্কাশিত হয়েছে তা নয়।"]
+      }
+    },
+    {
+      "id": "turkish",
+      "family": "spiced",
+      "origin": { "en": "Türkiye", "bn": "তুরস্ক" },
+      "name": { "en": "Turkish coffee", "bn": "তুর্কি কফি" },
+      "tagline": {
+        "en": "Very finely ground coffee simmered unfiltered in a cezve and served with its grounds.",
+        "bn": "অতি মিহি কফি জেজভেতে ফুটিয়ে, না ছেঁকে, গুঁড়োসহ পরিবেশন।"
+      },
+      "volume": { "en": "60–80 ml", "bn": "৬০–৮০ মি.লি." },
+      "profile": { "en": "Thick, powdery, aromatic", "bn": "ঘন, গুঁড়োটে, সুগন্ধি" },
+      "body": {
+        "en": "Turkish coffee is ground finer than espresso — closer to flour than sand — then heated with water, and usually sugar, in a long-handled pot called a cezve or ibrik. It is brought just to the point of foaming, often more than once, and poured unfiltered so the grounds settle into a thick layer at the bottom of the cup.\n\nThe method spread through the Ottoman Empire from the sixteenth century, and essentially the same preparation is found across the Balkans, the Levant, the Caucasus and North Africa under many different names. Cardamom is a common addition in Arab variants.\n\nSweetness is chosen when ordering, not after: sade is unsweetened, az şekerli lightly sweet, orta medium, çok şekerli sweet. The grounds are not meant to be drunk, and in many places reading the pattern they leave is part of the ritual.",
+        "bn": "তুর্কি কফি এসপ্রেসোর চেয়েও মিহি করে গুঁড়ো করা হয় — বালির চেয়ে বরং ময়দার কাছাকাছি — তারপর পানি, আর সাধারণত চিনিসহ, লম্বা হাতলের পাত্র জেজভে বা ইব্রিকে গরম করা হয়। ফেনা ওঠার ঠিক মুখে নামানো হয়, প্রায়ই একাধিকবার, আর না ছেঁকে ঢালা হয় — ফলে গুঁড়ো কাপের তলায় পুরু স্তরে থিতিয়ে পড়ে।\n\nপদ্ধতিটি ষোড়শ শতক থেকে উসমানীয় সাম্রাজ্যজুড়ে ছড়ায়, আর কার্যত একই প্রস্তুতি বলকান, লেভান্ট, ককেশাস ও উত্তর আফ্রিকায় নানা নামে পাওয়া যায়। আরব সংস্করণে এলাচ যোগ করা প্রচলিত।\n\nমিষ্টি ঠিক করা হয় অর্ডারের সময়, পরে নয়: \"সাদে\" মানে চিনি ছাড়া, \"আজ শেকেরলি\" অল্প মিষ্টি, \"ওর্তা\" মাঝারি, \"চোক শেকেরলি\" মিষ্টি। তলার গুঁড়ো খাওয়ার জন্য নয়, আর অনেক জায়গায় সেই গুঁড়োর নকশা পড়াও রীতির অংশ।"
+      },
+      "notes": {
+        "en": ["Sugar goes in during brewing, so it is chosen when ordering.", "UNESCO lists Turkish coffee culture as intangible cultural heritage."],
+        "bn": ["চিনি দেওয়া হয় বানানোর সময়, তাই অর্ডারেই ঠিক করতে হয়।", "ইউনেস্কো তুর্কি কফি-সংস্কৃতিকে অধরা সাংস্কৃতিক ঐতিহ্যের তালিকায় রেখেছে।"]
+      }
+    },
+    {
+      "id": "ca-phe-sua-da",
+      "family": "iced",
+      "origin": { "en": "Vietnam", "bn": "ভিয়েতনাম" },
+      "name": { "en": "Cà phê sữa đá", "bn": "কা ফে সুয়া দা" },
+      "tagline": {
+        "en": "Strong drip coffee over sweetened condensed milk, poured onto ice.",
+        "bn": "কনডেন্সড মিল্কের উপর কড়া ড্রিপ কফি, বরফে ঢালা।"
+      },
+      "volume": { "en": "180–240 ml", "bn": "১৮০–২৪০ মি.লি." },
+      "profile": { "en": "Sweet, heavy, chocolatey", "bn": "মিষ্টি, ভারী, চকলেটের মতো" },
+      "body": {
+        "en": "Coffee is brewed slowly through a small metal filter called a phin, which sits directly on the glass and drips for several minutes. Beneath it waits a layer of sweetened condensed milk; the two are stirred together and poured over ice.\n\nCondensed milk is not a shortcut here but a legacy: fresh dairy was scarce in Vietnam when coffee culture took hold under French colonial rule, and tinned sweetened milk kept well in the heat. It became the defining character of the drink rather than a substitute for something else.\n\nRobusta is the usual bean, often dark roasted, which gives the heavy, chocolate-bitter base that stands up to both the sugar and the melting ice.",
+        "bn": "কফি ধীরে ধীরে ছেঁকে নামে \"ফিন\" নামের ছোট ধাতব ফিল্টার দিয়ে, যা সরাসরি গ্লাসের উপর বসে কয়েক মিনিট ধরে ফোঁটায় ফোঁটায় পড়ে। নিচে অপেক্ষা করে মিষ্টি কনডেন্সড মিল্কের স্তর; দুটো মিশিয়ে বরফের উপর ঢালা হয়।\n\nকনডেন্সড মিল্ক এখানে সহজ উপায় নয়, বরং উত্তরাধিকার: ফরাসি ঔপনিবেশিক আমলে ভিয়েতনামে কফি-সংস্কৃতি যখন শিকড় গাড়ে, টাটকা দুধ দুষ্প্রাপ্য ছিল, আর টিনের মিষ্টি দুধ গরমে ভালো টিকত। সেটিই পানীয়টির মূল পরিচয় হয়ে ওঠে — কোনো কিছুর বিকল্প নয়।\n\nসাধারণত রোবাস্তা বীজ ব্যবহৃত হয়, প্রায়ই গাঢ় রোস্ট — যা দেয় ভারী, চকলেট-তেতো ভিত্তি, চিনি আর গলতে থাকা বরফ দুটোর সঙ্গেই যা টেকে।"
+      },
+      "notes": {
+        "en": ["Nóng is the hot version, đá means iced.", "The phin drips slowly by design — hurrying it thins the cup."],
+        "bn": ["\"নোং\" মানে গরম সংস্করণ, \"দা\" মানে বরফ দেওয়া।", "ফিন ইচ্ছে করেই ধীরে ফোঁটায় — তাড়াহুড়ো করলে কাপ পাতলা হয়ে যায়।"]
+      }
+    },
+    {
+      "id": "egg-coffee",
+      "family": "spiced",
+      "origin": { "en": "Vietnam", "bn": "ভিয়েতনাম" },
+      "name": { "en": "Cà phê trứng (egg coffee)", "bn": "কা ফে ত্রুং (ডিম-কফি)" },
+      "tagline": {
+        "en": "Hot coffee under a whipped cap of egg yolk and condensed milk.",
+        "bn": "ডিমের কুসুম আর কনডেন্সড মিল্কের ফেটানো টুপির নিচে গরম কফি।"
+      },
+      "volume": { "en": "120–150 ml", "bn": "১২০–১৫০ মি.লি." },
+      "profile": { "en": "Custardy, rich, dessert-like", "bn": "কাস্টার্ডের মতো, গাঢ়, মিষ্টান্নঘেঁষা" },
+      "body": {
+        "en": "Egg yolks are whipped with sweetened condensed milk until thick and pale, then spooned over hot coffee. The foam sits on the surface like a warm custard, and the drink is usually served in a small glass set in a bowl of hot water to keep it from cooling.\n\nIt is associated with Hanoi and generally credited to the Giảng café, founded in the 1940s, where the story goes that a shortage of fresh milk prompted beaten egg as a replacement. Family accounts support this broadly, though the detail is hard to verify independently.\n\nIt is eaten as much as drunk — most people spoon the foam first, then drink the coffee beneath.",
+        "bn": "ডিমের কুসুম মিষ্টি কনডেন্সড মিল্কের সঙ্গে ফেটানো হয় যতক্ষণ না ঘন ও ফ্যাকাশে হয়, তারপর চামচে করে গরম কফির উপর দেওয়া হয়। ফেনাটি উষ্ণ কাস্টার্ডের মতো উপরে বসে থাকে, আর পানীয়টি সাধারণত ছোট গ্লাসে দেওয়া হয় — গরম পানির বাটিতে বসিয়ে, যাতে ঠান্ডা না হয়।\n\nএটি হ্যানয়ের সঙ্গে জড়িত এবং সাধারণত কৃতিত্ব দেওয়া হয় ১৯৪০-এর দশকে প্রতিষ্ঠিত \"জ্যাং\" ক্যাফেকে, যেখানকার গল্প অনুযায়ী টাটকা দুধের অভাবে ফেটানো ডিম বিকল্প হিসেবে আসে। পারিবারিক বয়ান মোটের উপর এটি সমর্থন করে, যদিও খুঁটিনাটি স্বাধীনভাবে যাচাই করা কঠিন।\n\nএটি যতটা পান করা, ততটাই খাওয়া — বেশির ভাগ মানুষ আগে চামচে ফেনা তুলে খান, তারপর নিচের কফি পান করেন।"
+      },
+      "notes": {
+        "en": ["Served in a water bath so the custard stays warm.", "Raw egg is involved — worth knowing if that matters to you."],
+        "bn": ["কাস্টার্ড গরম রাখতে গরম পানির বাটিতে বসিয়ে দেওয়া হয়।", "কাঁচা ডিম ব্যবহৃত হয় — বিষয়টি আপনার জন্য গুরুত্বপূর্ণ হলে জেনে রাখুন।"]
+      }
+    },
+    {
+      "id": "buna",
+      "family": "black",
+      "origin": { "en": "Ethiopia", "bn": "ইথিওপিয়া" },
+      "name": { "en": "Buna (Ethiopian coffee ceremony)", "bn": "বুনা (ইথিওপীয় কফি অনুষ্ঠান)" },
+      "tagline": {
+        "en": "Green beans roasted, ground and brewed in front of guests, poured in three rounds.",
+        "bn": "অতিথিদের সামনেই কাঁচা বীজ রোস্ট, গুঁড়ো ও তৈরি — তিন দফায় পরিবেশন।"
+      },
+      "volume": { "en": "Small cups, three rounds", "bn": "ছোট কাপ, তিন দফা" },
+      "profile": { "en": "Bright, floral, lightly fruity", "bn": "উজ্জ্বল, ফুলেল, হালকা ফলের আভা" },
+      "body": {
+        "en": "The ceremony is a social occasion rather than a recipe. Green beans are washed and roasted in a pan over coals while guests watch, and the roasting pan is carried around so everyone can take in the smoke. The beans are ground by hand and brewed in a clay pot called a jebena, then poured from height into small handleless cups.\n\nThree rounds are served in sequence — abol, tona and baraka — and leaving before the third is considered impolite, since the last round carries the blessing. Incense is commonly burned, and the coffee is often served with a snack such as popcorn or roasted barley.\n\nEthiopia is the plant's centre of origin, and coffee there is woven into daily hospitality in a way that has no real parallel in café culture elsewhere.",
+        "bn": "অনুষ্ঠানটি কোনো রেসিপি নয়, বরং সামাজিক আয়োজন। অতিথিদের সামনেই কাঁচা বীজ ধুয়ে কয়লার আঁচে কড়াইয়ে রোস্ট করা হয়, আর সেই কড়াই ঘুরিয়ে আনা হয় যাতে সবাই ধোঁয়ার ঘ্রাণ নিতে পারেন। বীজ হাতে গুঁড়ো করে মাটির পাত্র \"জেবেনা\"-য় তৈরি করা হয়, তারপর উঁচু থেকে ঢালা হয় হাতলবিহীন ছোট কাপে।\n\nপর পর তিন দফা পরিবেশিত হয় — আবোল, তোনা ও বারাকা — আর তৃতীয়টির আগে উঠে যাওয়া অভদ্রতা বলে গণ্য, কারণ শেষ দফাটি আশীর্বাদ বহন করে। সাধারণত ধূপ জ্বালানো হয়, আর কফির সঙ্গে প্রায়ই খই বা ভাজা যবের মতো জলখাবার দেওয়া হয়।\n\nইথিওপিয়া কফিগাছের উৎপত্তিস্থল, আর সেখানে কফি দৈনন্দিন আতিথেয়তার সঙ্গে এমনভাবে জড়িয়ে আছে, যার সত্যিকারের তুলনা অন্যত্র ক্যাফে-সংস্কৃতিতে নেই।"
+      },
+      "notes": {
+        "en": ["Three rounds: abol, tona, baraka. Staying for all three is the courtesy.", "The roast happens in the room — the aroma is part of the event."],
+        "bn": ["তিন দফা: আবোল, তোনা, বারাকা। তিনটিতেই থাকা সৌজন্য।", "রোস্ট হয় ঘরের ভেতরেই — ঘ্রাণটিও আয়োজনের অংশ।"]
+      }
+    },
+    {
+      "id": "cafe-cubano",
+      "family": "spiced",
+      "origin": { "en": "Cuba", "bn": "কিউবা" },
+      "name": { "en": "Café cubano", "bn": "ক্যাফে কুবানো" },
+      "tagline": {
+        "en": "Espresso whipped with sugar during the pour, giving a pale sweet crust.",
+        "bn": "ঢালার সময় চিনি দিয়ে ফেটানো এসপ্রেসো, উপরে ফ্যাকাশে মিষ্টি আস্তরণ।"
+      },
+      "volume": { "en": "30–60 ml", "bn": "৩০–৬০ মি.লি." },
+      "profile": { "en": "Very sweet, thick, intense", "bn": "খুব মিষ্টি, ঘন, তীব্র" },
+      "body": {
+        "en": "The distinguishing step is the espuma: the first few drops of the espresso are beaten vigorously with sugar until they turn into a pale, thick paste, which is then stirred back through the rest of the shot. The sugar is whipped into the coffee rather than dissolved after, which gives a denser, foamier texture than simply sweetening a shot.\n\nIt is strongly social. A colada is a larger serving brought out with a stack of small plastic cups, meant to be split among colleagues or friends — a shared round rather than an individual drink.\n\nRelated drinks include the cortadito, which adds steamed milk, and café con leche, which is a larger milk drink taken at breakfast.",
+        "bn": "আলাদা করে চেনার ধাপটি হলো \"এস্পুমা\": এসপ্রেসোর প্রথম কয়েক ফোঁটা চিনির সঙ্গে জোরে ফেটানো হয় যতক্ষণ না ফ্যাকাশে ঘন মণ্ড তৈরি হয়, তারপর সেটি বাকি শটের সঙ্গে মিশিয়ে দেওয়া হয়। চিনি পরে গুলে নয়, কফির সঙ্গেই ফেটানো হয় — ফলে সাধারণ মিষ্টি শটের চেয়ে গঠন হয় ঘন ও ফেনাটে।\n\nএটি গভীরভাবে সামাজিক। \"কোলাদা\" হলো বড় পরিবেশন, সঙ্গে আসে একগুচ্ছ ছোট প্লাস্টিক কাপ — সহকর্মী বা বন্ধুদের মধ্যে ভাগ করে নেওয়ার জন্য; একক পানীয় নয়, ভাগ করা দফা।\n\nকাছাকাছি পানীয়ের মধ্যে আছে কোর্তাদিতো, যাতে বাষ্পে গরম দুধ যোগ হয়, আর ক্যাফে কন লেচে — সকালের বড় দুধ-পানীয়।"
+      },
+      "notes": {
+        "en": ["A colada is for sharing, not for one person.", "Sugar is whipped in, not stirred in afterwards."],
+        "bn": ["\"কোলাদা\" ভাগ করে নেওয়ার জন্য, একজনের জন্য নয়।", "চিনি পরে গুলে নয়, ফেটিয়ে মেশানো হয়।"]
+      }
+    },
+    {
+      "id": "frappe",
+      "family": "iced",
+      "origin": { "en": "Greece", "bn": "গ্রিস" },
+      "name": { "en": "Frappé", "bn": "ফ্রাপে" },
+      "tagline": {
+        "en": "Instant coffee shaken to a stiff foam, served long over ice.",
+        "bn": "ইনস্ট্যান্ট কফি ঝাঁকিয়ে শক্ত ফেনা, বরফে লম্বা করে পরিবেশন।"
+      },
+      "volume": { "en": "250–350 ml", "bn": "২৫০–৩৫০ মি.লি." },
+      "profile": { "en": "Foamy, bracing, refreshing", "bn": "ফেনাটে, চাঙা করা, সতেজ" },
+      "body": {
+        "en": "Spray-dried instant coffee is shaken or blended with a little cold water and sugar until it forms a dense, long-lasting foam, then poured over ice and topped up with water, with milk optional. It is one of the few drinks where instant coffee is the correct ingredient rather than a compromise — the foam depends on it.\n\nIt is usually dated to the 1957 Thessaloniki International Fair, where a Nestlé representative, lacking hot water, improvised by shaking instant coffee with cold water. The account is widely repeated in Greece and generally accepted.\n\nSweetness is specified when ordering — sketos unsweetened, metrios medium, glykos sweet — and it is a drink built for sitting with for an hour, not for finishing quickly.",
+        "bn": "স্প্রে-ড্রায়েড ইনস্ট্যান্ট কফি অল্প ঠান্ডা পানি ও চিনির সঙ্গে ঝাঁকিয়ে বা ব্লেন্ড করে ঘন, দীর্ঘস্থায়ী ফেনা তৈরি করা হয়, তারপর বরফের উপর ঢেলে পানি মিশিয়ে লম্বা করা হয়; দুধ ঐচ্ছিক। অল্প যে কয়টি পানীয়ে ইনস্ট্যান্ট কফি আপস নয় বরং সঠিক উপাদান, এটি তার একটি — ফেনাটি এর উপরেই নির্ভরশীল।\n\nসাধারণত এর সূচনা ধরা হয় ১৯৫৭ সালের থেসালোনিকি আন্তর্জাতিক মেলায়, যেখানে নেসলের এক প্রতিনিধি গরম পানি না পেয়ে ঠান্ডা পানিতে ইনস্ট্যান্ট কফি ঝাঁকিয়ে কাজ চালিয়ে নেন। গ্রিসে বয়ানটি বহুল প্রচলিত ও মোটের উপর স্বীকৃত।\n\nমিষ্টি ঠিক করা হয় অর্ডারের সময় — \"স্কেতোস\" চিনি ছাড়া, \"মেত্রিওস\" মাঝারি, \"গ্লিকোস\" মিষ্টি — আর এটি ঘণ্টাখানেক বসে থাকার পানীয়, দ্রুত শেষ করার নয়।"
+      },
+      "notes": {
+        "en": ["Instant coffee is required — ground coffee will not foam this way.", "Freddo espresso and freddo cappuccino are the espresso-based cousins."],
+        "bn": ["ইনস্ট্যান্ট কফিই লাগে — গুঁড়ো কফিতে এভাবে ফেনা হবে না।", "\"ফ্রেদ্দো এসপ্রেসো\" ও \"ফ্রেদ্দো কাপুচিনো\" হলো এসপ্রেসো-ভিত্তিক আত্মীয়।"]
+      }
+    },
+    {
+      "id": "irish-coffee",
+      "family": "spiced",
+      "origin": { "en": "Ireland", "bn": "আয়ারল্যান্ড" },
+      "name": { "en": "Irish coffee", "bn": "আইরিশ কফি" },
+      "tagline": {
+        "en": "Sweetened coffee with whiskey, under a float of lightly whipped cream.",
+        "bn": "হুইস্কিসহ মিষ্টি কফি, উপরে হালকা ফেটানো ক্রিমের স্তর।"
+      },
+      "volume": { "en": "180–200 ml", "bn": "১৮০–২০০ মি.লি." },
+      "profile": { "en": "Warm, sweet, spirituous", "bn": "উষ্ণ, মিষ্টি, সুরাস্বাদী" },
+      "body": {
+        "en": "Hot coffee is sweetened, combined with Irish whiskey, and finished with cream poured over the back of a spoon so it floats rather than mixes. The drink is taken through the cream, which is why the cream must be whipped only lightly — thick enough to float, loose enough to drink through.\n\nIt is credited to Joe Sheridan at Foynes, County Limerick, in the 1940s, where it was served to transatlantic passengers waiting out bad weather. It reached the United States through the Buena Vista Café in San Francisco in the early 1950s.\n\nThe sugar is not optional in the traditional build: it helps the cream sit, as well as balancing the whiskey.",
+        "bn": "গরম কফিতে চিনি মিশিয়ে আইরিশ হুইস্কি যোগ করা হয়, আর শেষে চামচের পিঠে ঢেলে ক্রিম ভাসিয়ে দেওয়া হয় — মিশে যাওয়ার বদলে। পানীয়টি সেই ক্রিমের ভেতর দিয়ে পান করা হয়, তাই ক্রিম কেবল হালকা ফেটানো থাকতে হবে — ভাসার মতো ঘন, আবার ভেতর দিয়ে পান করার মতো পাতলা।\n\nকৃতিত্ব দেওয়া হয় ১৯৪০-এর দশকে কাউন্টি লিমেরিকের ফয়েনসে জো শেরিডানকে, যেখানে দুর্যোগে আটকে পড়া আটলান্টিক-পারের যাত্রীদের এটি পরিবেশন করা হতো। পঞ্চাশের দশকের শুরুতে সান ফ্রান্সিসকোর বুয়েনা ভিস্তা ক্যাফের মাধ্যমে এটি যুক্তরাষ্ট্রে পৌঁছায়।\n\nঐতিহ্যবাহী গড়নে চিনি ঐচ্ছিক নয়: এটি ক্রিম ভাসতে সাহায্য করে, পাশাপাশি হুইস্কির সঙ্গে ভারসাম্য আনে।"
+      },
+      "notes": {
+        "en": ["Contains alcohol.", "Cream is floated, never stirred in."],
+        "bn": ["এতে অ্যালকোহল আছে।", "ক্রিম ভাসিয়ে দেওয়া হয়, কখনো মিশিয়ে নয়।"]
+      }
+    },
+    {
+      "id": "cold-brew",
+      "family": "iced",
+      "origin": { "en": "Widely adopted", "bn": "বহুল প্রচলিত" },
+      "name": { "en": "Cold brew", "bn": "কোল্ড ব্রু" },
+      "tagline": {
+        "en": "Coarse grounds steeped in cold water for many hours, then filtered.",
+        "bn": "মোটা গুঁড়ো ঠান্ডা পানিতে বহু ঘণ্টা ভিজিয়ে, তারপর ছেঁকে নেওয়া।"
+      },
+      "volume": { "en": "Served long, often diluted", "bn": "লম্বা করে, প্রায়ই পানি মিশিয়ে" },
+      "profile": { "en": "Smooth, low acidity, sweet-edged", "bn": "মসৃণ, কম অম্লতা, মিষ্টিঘেঁষা" },
+      "body": {
+        "en": "Coarsely ground coffee is steeped in cold or room-temperature water, typically for twelve to twenty-four hours, then filtered out. Because heat drives the extraction of many acidic and aromatic compounds, brewing cold produces a noticeably rounder, less acidic cup — and also a less aromatic one, which is the trade-off.\n\nIt is often confused with iced coffee. Iced coffee is brewed hot and then chilled, which keeps the brighter notes; cold brew never gets hot at all. Japanese iced coffee is a third approach — brewed hot directly onto ice, aiming for brightness and chill together.\n\nMost cold brew is made as a concentrate and cut with water or milk to taste before serving.",
+        "bn": "মোটা করে গুঁড়ো করা কফি ঠান্ডা বা ঘরের তাপমাত্রার পানিতে ভেজানো হয়, সাধারণত বারো থেকে চব্বিশ ঘণ্টা, তারপর ছেঁকে ফেলা হয়। তাপ অনেক অম্লীয় ও সুগন্ধি যৌগের নিষ্কাশন চালায় বলে ঠান্ডায় বানালে কাপ হয় লক্ষণীয়ভাবে গোল ও কম অম্লীয় — আবার কম সুগন্ধিও, এটাই আপস।\n\nএটি প্রায়ই \"আইসড কফি\"র সঙ্গে গুলিয়ে ফেলা হয়। আইসড কফি গরমে বানিয়ে পরে ঠান্ডা করা হয়, তাই উজ্জ্বল সুরগুলো থাকে; কোল্ড ব্রু কখনো গরমই হয় না। জাপানি আইসড কফি তৃতীয় পথ — সরাসরি বরফের উপর গরম ঢেলে বানানো, যাতে উজ্জ্বলতা ও শীতলতা একসঙ্গে মেলে।\n\nবেশির ভাগ কোল্ড ব্রু ঘন করে বানিয়ে পরিবেশনের আগে পানি বা দুধে মিশিয়ে নেওয়া হয়।"
+      },
+      "notes": {
+        "en": ["Cold brew and iced coffee are different methods with different results.", "Usually brewed as a concentrate and diluted before serving."],
+        "bn": ["কোল্ড ব্রু আর আইসড কফি আলাদা পদ্ধতি, ফলও আলাদা।", "সাধারণত ঘন করে বানিয়ে পরিবেশনের আগে পানি মেশানো হয়।"]
+      }
+    },
+    {
+      "id": "affogato",
+      "family": "espresso",
+      "origin": { "en": "Italy", "bn": "ইতালি" },
+      "name": { "en": "Affogato", "bn": "আফোগাতো" },
+      "tagline": {
+        "en": "A shot of hot espresso poured over cold vanilla gelato.",
+        "bn": "ঠান্ডা ভ্যানিলা জেলাতোর উপর গরম এসপ্রেসোর শট।"
+      },
+      "volume": { "en": "One scoop, one shot", "bn": "এক স্কুপ, এক শট" },
+      "profile": { "en": "Hot and cold, bitter and sweet", "bn": "গরম ও ঠান্ডা, তেতো ও মিষ্টি" },
+      "body": {
+        "en": "Affogato means drowned. A scoop of cold vanilla gelato is put in a glass and a hot espresso poured straight over it, so it is eaten while the two are still at odds — the espresso bitter and hot, the gelato sweet and cold, melting into it as you go.\n\nIt occupies an ambiguous place on menus, listed sometimes as a dessert and sometimes as a coffee, and in practice functioning as both at the end of a meal.\n\nThe only real requirements are that the espresso is fresh and the gelato is cold enough not to collapse immediately, which is why it is assembled at the table rather than in advance.",
+        "bn": "\"আফোগাতো\" মানে ডুবে যাওয়া। এক স্কুপ ঠান্ডা ভ্যানিলা জেলাতো গ্লাসে রেখে তার উপর সরাসরি গরম এসপ্রেসো ঢালা হয়, আর দুটি যখন এখনো পরস্পরবিরোধী তখনই খাওয়া হয় — এসপ্রেসো তেতো ও গরম, জেলাতো মিষ্টি ও ঠান্ডা, খেতে খেতে মিশে যাচ্ছে।\n\nমেনুতে এর জায়গা দ্ব্যর্থক — কখনো মিষ্টান্ন, কখনো কফি হিসেবে তালিকাভুক্ত, আর বাস্তবে খাওয়ার শেষে দুটোরই কাজ করে।\n\nসত্যিকারের শর্ত কেবল দুটি: এসপ্রেসো টাটকা হতে হবে আর জেলাতো যথেষ্ট ঠান্ডা যাতে সঙ্গে সঙ্গে গলে না পড়ে — এ কারণেই এটি আগে থেকে নয়, টেবিলেই বানানো হয়।"
+      },
+      "notes": {
+        "en": ["Assembled at the moment of serving, never in advance.", "Gelato, not milk, is what makes it an affogato."],
+        "bn": ["পরিবেশনের মুহূর্তেই বানানো হয়, আগে থেকে নয়।", "দুধ নয়, জেলাতোই একে আফোগাতো করে তোলে।"]
+      }
+    }
+  ]
+}

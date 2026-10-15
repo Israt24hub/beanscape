@@ -1,0 +1,314 @@
+/* Beanscape — Discover Coffee: the directory and the detail view */
+
+/* ---------- controls ---------- */
+.controls {
+  position: sticky;
+  top: 3.6rem;
+  z-index: 20;
+  background: rgba(10, 6, 3, 0.94);
+  backdrop-filter: blur(10px);
+  padding: var(--s3) 0 var(--s2);
+  border-bottom: 1px solid var(--rule);
+}
+
+.search {
+  position: relative;
+  display: block;
+  margin-bottom: var(--s2);
+}
+
+.search__field {
+  width: 100%;
+  padding: 0.8rem 2.6rem 0.8rem 2.5rem;
+  font: inherit;
+  font-size: var(--t-bd);
+  color: var(--ink);
+  background: rgba(42, 27, 18, 0.5);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.search__field::placeholder { color: var(--ink-faint); }
+
+.search__field:hover { border-color: var(--rule-strong); }
+
+.search__field:focus {
+  outline: none;
+  border-color: var(--crema);
+  background: rgba(42, 27, 18, 0.78);
+}
+
+.search__icon,
+.search__clear {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-faint);
+  pointer-events: none;
+}
+
+.search__icon { left: 0.95rem; width: 1rem; height: 1rem; }
+
+.search__clear {
+  right: 0.6rem;
+  pointer-events: auto;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+}
+
+.search__clear svg { width: 0.85rem; height: 0.85rem; }
+.search__clear:hover { color: var(--cream); background: rgba(227, 184, 114, 0.12); }
+.search__clear[hidden] { display: none; }
+
+/* family filter: a row of pills */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.filters button {
+  padding: 0.38rem 0.85rem;
+  font-size: var(--t-xs);
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s, background-color 0.2s;
+}
+
+.filters button:hover { color: var(--cream); border-color: var(--rule-strong); }
+
+.filters button[aria-pressed='true'] {
+  color: var(--void);
+  background: var(--crema);
+  border-color: var(--crema);
+  font-variation-settings: 'wght' 560;
+}
+
+.resultcount {
+  margin: var(--s2) 0 0;
+  font-size: var(--t-xs);
+  color: var(--ink-faint);
+}
+
+/* ---------- the grid ---------- */
+.drinks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin: var(--s4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* hairline-separated cells rather than floating cards: this is a reference
+   work, so the grid should read as a table of entries, not a product shelf */
+.drink {
+  background: var(--void);
+  margin: 0;
+}
+
+.drink__link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  height: 100%;
+  padding: var(--s3);
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.25s var(--ease-soft);
+}
+
+.drink__link:hover,
+.drink__link:focus-visible { background: rgba(200, 116, 31, 0.07); }
+
+.drink__origin {
+  font-size: var(--t-xs);
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+}
+
+.drink__name {
+  font-family: var(--display);
+  font-size: var(--t-md);
+  font-variation-settings: 'wght' 400, 'SOFT' 30, 'WONK' 1, 'opsz' 40;
+  line-height: 1.12;
+  margin: 0;
+  color: var(--ink);
+  transition: color 0.25s var(--ease-soft);
+}
+
+.drink__link:hover .drink__name { color: var(--crema); }
+
+.drink__tagline {
+  font-size: var(--t-sm);
+  color: var(--ink-soft);
+  margin: 0;
+  flex: 1;
+}
+
+.drink__profile {
+  font-size: var(--t-xs);
+  color: var(--amber-lift);
+  margin: 0;
+  padding-top: 0.3rem;
+}
+
+.empty {
+  padding: var(--s5) 0;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+.empty[hidden] { display: none; }
+
+/* ---------- detail view ---------- */
+.detail {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  overflow-y: auto;
+  background: var(--void);
+  animation: detail-in 0.32s var(--ease-out);
+}
+
+.detail[hidden] { display: none; }
+
+@keyframes detail-in {
+  from { opacity: 0; transform: translateY(1.4rem); }
+  to   { opacity: 1; transform: none; }
+}
+
+.detail__bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: var(--s2) 0;
+  background: rgba(10, 6, 3, 0.93);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.detail__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--t-sm);
+  color: var(--ink-soft);
+}
+
+.detail__back svg { width: 0.9rem; height: 0.9rem; }
+.detail__back:hover { color: var(--cream); }
+
+.detail__body { padding: var(--s5) 0 var(--s6); }
+
+.detail__origin {
+  font-size: var(--t-sm);
+  color: var(--crema);
+  margin: 0 0 var(--s1);
+}
+
+.detail__name {
+  font-size: var(--t-xl);
+  font-variation-settings: 'wght' 400, 'SOFT' 40, 'WONK' 1, 'opsz' 144;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--s2);
+  text-wrap: balance;
+}
+
+.detail__tagline {
+  font-size: var(--t-md);
+  color: var(--ink-soft);
+  max-width: 48ch;
+  margin: 0 0 var(--s4);
+  line-height: 1.45;
+}
+
+/* the quick-facts strip: the thing a reader scans before reading */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--s3);
+  margin: 0 0 var(--s4);
+  padding: var(--s3) 0;
+  border-block: 1px solid var(--rule);
+}
+
+.facts div { margin: 0; }
+
+.facts dt {
+  font-size: var(--t-xs);
+  color: var(--ink-faint);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.3rem;
+}
+
+.facts dd {
+  font-size: var(--t-bd);
+  color: var(--ink);
+  margin: 0;
+}
+
+.detail__prose p {
+  max-width: 68ch;
+  margin: 0 0 var(--s3);
+  color: var(--ink-soft);
+}
+
+.detail__notes {
+  margin: var(--s4) 0 0;
+  padding: var(--s3) var(--s3) var(--s3) var(--s4);
+  border-left: 2px solid var(--rule-strong);
+  border-radius: 0;
+  background: rgba(42, 27, 18, 0.34);
+}
+
+.detail__notes h2 {
+  font-family: var(--text);
+  font-size: var(--t-xs);
+  font-variation-settings: 'wght' 600;
+  letter-spacing: 0.08em;
+  color: var(--crema);
+  margin: 0 0 var(--s2);
+}
+
+.detail__notes ul { margin: 0; padding-left: 1.1rem; }
+.detail__notes li { color: var(--ink-soft); font-size: var(--t-sm); margin-bottom: 0.4rem; }
+.detail__notes li:last-child { margin-bottom: 0; }
+
+/* previous / next, so the detail view is browsable without going back */
+.detail__nav {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s3);
+  margin-top: var(--s5);
+  padding-top: var(--s3);
+  border-top: 1px solid var(--rule);
+}
+
+.detail__nav a {
+  font-size: var(--t-sm);
+  color: var(--ink-soft);
+  text-decoration: none;
+  max-width: 46%;
+}
+
+.detail__nav a:hover { color: var(--crema); }
+.detail__nav a span { display: block; font-size: var(--t-xs); color: var(--ink-faint); }
+.detail__nav a[hidden] { visibility: hidden; }
