@@ -1,6 +1,6 @@
 # Beanscape
 
-**A world in every cup.**
+**A world in every cup.** — [israt24hub.github.io/beanscape](https://israt24hub.github.io/beanscape/)
 
 An independent, non-commercial encyclopedia of coffee: its history, its drinks,
 how it is grown, roasted and brewed, and what it means in kitchens around the
@@ -64,11 +64,16 @@ CHROMIUM_PATH=/path/to/chrome npm test
 
 ## Deploying
 
+Live at **https://israt24hub.github.io/beanscape/**
+
 Pushing to `main` runs CI (`.github/workflows/ci.yml`); if it passes, the
 deploy workflow publishes the repository root to GitHub Pages. A red build
 never reaches the live site. Nothing is compiled.
 
-Enable it once under **Settings → Pages → Source: GitHub Actions**.
+This requires **Settings → Pages → Source: GitHub Actions**. With the source
+set to "Deploy from a branch" instead, GitHub's own builder publishes every
+push immediately and the CI gate is bypassed — the site would go live whether
+the tests passed or not.
 
 ---
 
